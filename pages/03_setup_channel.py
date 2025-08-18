@@ -6,15 +6,64 @@ def fetch_channel_info(api_key):
     try:
         youtube = build('youtube', 'v3', developerKey=api_key)
         
-        # Get channel info for the authenticated user
+        # For API key-only access, we need to search for the channel first
+        # This approach requires the user to know their channel name or ID
+        st.info("ℹ️ To auto-fetch channel information, please enter your channel name or ID below:")
+        channel_identifier = st.text_input("Channel Name or ID", placeholder="e.g., @YourChannelName or UCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        
+        if not channel_identifier:
+            return None
+            
+        # Try to find channel by username/handle first
+        if channel_identifier.startswith('@'):
+            # Handle format (new YouTube format)
+            search_response = youtube.search().list(
+                part='snippet',
+                type='channel',
+                q=channel_identifier,
+                maxResults=1
+            ).execute()
+        else:
+            # Try as channel ID or name
+            try:
+                # First try as channel ID
+                channel_response = youtube.channels().list(
+                    part='snippet,statistics',
+                    id=channel_identifier
+                ).execute()
+                if channel_response.get('items'):
+                    search_response = channel_response
+                else:
+                    # If that fails, search by name
+                    search_response = youtube.search().list(
+                        part='snippet',
+                        type='channel',
+                        q=channel_identifier,
+                        maxResults=1
+                    ).execute()
+            except:
+                # Fallback to search
+                search_response = youtube.search().list(
+                    part='snippet',
+                    type='channel',
+                    q=channel_identifier,
+                    maxResults=1
+                ).execute()
+        
+        if not search_response.get('items'):
+            st.warning("⚠️ Could not find channel with that identifier. Please check and try again.")
+            return None
+            
+        channel_item = search_response['items'][0]
+        channel_id = channel_item['id']['channelId'] if 'channelId' in channel_item['id'] else channel_item['id']
+        
+        # Get detailed channel statistics
         channel_response = youtube.channels().list(
-            part='snippet,statistics,contentDetails',
-            mine=True
+            part='snippet,statistics',
+            id=channel_id
         ).execute()
         
         if not channel_response.get('items'):
-            # If mine=True doesn't work, try to get channel info by username
-            # This is a fallback approach
             return None
             
         channel_data = channel_response['items'][0]
@@ -24,6 +73,7 @@ def fetch_channel_info(api_key):
         statistics = channel_data.get('statistics', {})
         
         channel_info = {
+            'id': channel_id,
             'title': snippet.get('title', ''),
             'description': snippet.get('description', ''),
             'subscriber_count': int(statistics.get('subscriberCount', 0)),
@@ -40,19 +90,11 @@ def fetch_channel_info(api_key):
 # Function to fetch top videos for the channel
 def fetch_top_videos(api_key, channel_id=None):
     try:
-        youtube = build('youtube', 'v3', developerKey=api_key)
-        
-        # If we don't have channel_id, we need to get it first
         if not channel_id:
-            channel_response = youtube.channels().list(
-                part='id',
-                mine=True
-            ).execute()
+            st.warning("⚠️ Channel ID is required to fetch top videos. Please enter your channel information first.")
+            return []
             
-            if not channel_response.get('items'):
-                return []
-                
-            channel_id = channel_response['items'][0]['id']
+        youtube = build('youtube', 'v3', developerKey=api_key)
         
         # Get top videos sorted by view count
         search_response = youtube.search().list(
@@ -105,7 +147,10 @@ Informasi ini akan digunakan oleh AI untuk memberikan rekomendasi yang lebih tep
 
 # Auto-fetch channel information if API keys are available
 if st.session_state.get('yt_api_key'):
-    if st.button("🔍 Auto-fetch Channel Information"):
+    st.info("ℹ️ To auto-fetch channel information, please enter your channel name or ID below:")
+    channel_identifier = st.text_input("Channel Name or ID", placeholder="e.g., @YourChannelName or UCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", key="channel_identifier")
+    
+    if st.button("🔍 Auto-fetch Channel Information") and channel_identifier:
         with st.spinner("Fetching channel information..."):
             channel_info = fetch_channel_info(st.session_state['yt_api_key'])
             if channel_info:
@@ -117,14 +162,14 @@ if st.session_state.get('yt_api_key'):
                 })
                 st.success("✅ Channel information fetched successfully!")
                 st.info("Please review and complete the information below, especially the audience details and niche.")
-            else:
-                st.warning("⚠️ Could not fetch channel information. Please check your API key or enter information manually.")
                 
                 # Try to fetch top videos
-                top_videos = fetch_top_videos(st.session_state['yt_api_key'])
+                top_videos = fetch_top_videos(st.session_state['yt_api_key'], channel_info['id'])
                 if top_videos:
                     st.session_state.channel_context["top_videos"] = top_videos
                     st.success("✅ Top videos fetched successfully!")
+            else:
+                st.warning("⚠️ Could not fetch channel information. Please check your channel identifier or enter information manually.")
 else:
     st.info("ℹ️ Set up your API keys first in the 'Setup API Keys' page to enable auto-fetching of channel information.")
 
