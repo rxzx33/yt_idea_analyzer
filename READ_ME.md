@@ -7,8 +7,9 @@ This application helps analyze YouTube Shorts content ideas by examining trendin
 This application now features a multi-page interface for better user experience:
 
 1. **Home Page** - Overview and instructions
-2. **Setup API Keys** - Securely enter and store your API keys
-3. **Analyze Content** - Perform content analysis using your API keys
+2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis
+3. **Setup API Keys** - Securely enter and store your API keys
+4. **Analyze Content** - Perform content analysis using your API keys and channel context
 
 ## Important Note About API Keys
 

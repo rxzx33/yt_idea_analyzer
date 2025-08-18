@@ -117,8 +117,8 @@ with st.form("content_analysis_form"):
                                     - Video dengan engagement rate yang lebih tinggi menunjukkan potensi yang lebih baik untuk ide konten Anda
                                     """)
                                 
-                                # Prepare channel context data
-                                channel_context_data = {
+                                # Prepare channel context data from session state or use default
+                                channel_context_data = st.session_state.get('channel_context', {
                                     "subscriber_count": 47,
                                     "top_videos": [
                                         {"title": "Perpustakaan Terlarang di Vatikan", "views": "3200", "topic": "Sejarah & Misteri"},
@@ -134,7 +134,7 @@ with st.form("content_analysis_form"):
                                     "niche": "Edutainment dan Misteri",
                                     "total_views_365_days": 35000,
                                     "content_type": "shorts"
-                                }
+                                })
                                 
                                 # Prepare LLM prompt
                                 llm_prompt = f"""
