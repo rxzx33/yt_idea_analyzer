@@ -15,7 +15,7 @@ Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan mem
 ## Cara Menggunakan Aplikasi Ini
 
 1. **Persiapkan API Keys**: Dapatkan API Keys dari Google Cloud Console (YouTube Data API) dan Google AI Studio (Gemini API)
-2. **Atur Konteks Channel**: Masukkan informasi channel kamu untuk personalisasi analisis (dapat menggunakan fitur auto-fetch untuk mengambil data otomatis)
+2. **Atur Konteks Channel**: Masukkan informasi channel kamu untuk personalisasi analisis
 3. **Masukkan API Keys**: Klik "Setup API Keys" di sidebar untuk memasukkan API Keys Anda
 4. **Analisis Ide Konten**: Setelah mengatur keduanya, Anda dapat menggunakan fitur analisis ide konten
 
