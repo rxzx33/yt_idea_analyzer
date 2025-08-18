@@ -1,4 +1,92 @@
 import streamlit as st
+from googleapiclient.discovery import build
+
+# Function to fetch channel information using YouTube API
+def fetch_channel_info(api_key):
+    try:
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        
+        # Get channel info for the authenticated user
+        channel_response = youtube.channels().list(
+            part='snippet,statistics,contentDetails',
+            mine=True
+        ).execute()
+        
+        if not channel_response.get('items'):
+            # If mine=True doesn't work, try to get channel info by username
+            # This is a fallback approach
+            return None
+            
+        channel_data = channel_response['items'][0]
+        
+        # Extract relevant information
+        snippet = channel_data.get('snippet', {})
+        statistics = channel_data.get('statistics', {})
+        
+        channel_info = {
+            'title': snippet.get('title', ''),
+            'description': snippet.get('description', ''),
+            'subscriber_count': int(statistics.get('subscriberCount', 0)),
+            'view_count': int(statistics.get('viewCount', 0)),
+            'video_count': int(statistics.get('videoCount', 0)),
+            'country': snippet.get('country', ''),
+        }
+        
+        return channel_info
+    except Exception as e:
+        st.error(f"Error fetching channel info: {str(e)}")
+        return None
+
+# Function to fetch top videos for the channel
+def fetch_top_videos(api_key, channel_id=None):
+    try:
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        
+        # If we don't have channel_id, we need to get it first
+        if not channel_id:
+            channel_response = youtube.channels().list(
+                part='id',
+                mine=True
+            ).execute()
+            
+            if not channel_response.get('items'):
+                return []
+                
+            channel_id = channel_response['items'][0]['id']
+        
+        # Get top videos sorted by view count
+        search_response = youtube.search().list(
+            channelId=channel_id,
+            part='snippet,id',
+            type='video',
+            order='viewCount',
+            maxResults=3
+        ).execute()
+        
+        top_videos = []
+        video_ids = [item['id']['videoId'] for item in search_response.get('items', []) if item.get('id', {}).get('videoId')]
+        
+        if video_ids:
+            # Get detailed video statistics
+            videos_response = youtube.videos().list(
+                id=','.join(video_ids),
+                part='snippet,statistics'
+            ).execute()
+            
+            for item in videos_response.get('items', []):
+                snippet = item.get('snippet', {})
+                statistics = item.get('statistics', {})
+                
+                top_videos.append({
+                    'title': snippet.get('title', ''),
+                    'views': statistics.get('viewCount', '0'),
+                    'topic': 'Your Top Video',  # We'll let users customize this
+                })
+        
+        return top_videos
+    except Exception as e:
+        st.error(f"Error fetching top videos: {str(e)}")
+        return []
 
 st.set_page_config(
     page_title="Setup Channel Context - YouTube Shorts Idea Analyzer",
@@ -14,6 +102,31 @@ Informasi ini akan digunakan oleh AI untuk memberikan rekomendasi yang lebih tep
 
 ℹ️ **Catatan**: Data default di bawah ini hanyalah contoh. Harap ganti dengan informasi channel kamu sendiri untuk hasil yang lebih akurat.
 """)
+
+# Auto-fetch channel information if API keys are available
+if st.session_state.get('yt_api_key'):
+    if st.button("🔍 Auto-fetch Channel Information"):
+        with st.spinner("Fetching channel information..."):
+            channel_info = fetch_channel_info(st.session_state['yt_api_key'])
+            if channel_info:
+                # Update session state with fetched information
+                st.session_state.channel_context.update({
+                    "subscriber_count": channel_info['subscriber_count'],
+                    "total_views_365_days": channel_info['view_count'],  # Approximation
+                    "niche": "Please specify your niche",  # We can't determine this automatically
+                })
+                st.success("✅ Channel information fetched successfully!")
+                st.info("Please review and complete the information below, especially the audience details and niche.")
+            else:
+                st.warning("⚠️ Could not fetch channel information. Please check your API key or enter information manually.")
+                
+                # Try to fetch top videos
+                top_videos = fetch_top_videos(st.session_state['yt_api_key'])
+                if top_videos:
+                    st.session_state.channel_context["top_videos"] = top_videos
+                    st.success("✅ Top videos fetched successfully!")
+else:
+    st.info("ℹ️ Set up your API keys first in the 'Setup API Keys' page to enable auto-fetching of channel information.")
 
 # Initialize session state for channel context if not already present
 # Using generic placeholder data that users should customize
