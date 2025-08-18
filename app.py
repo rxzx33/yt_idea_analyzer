@@ -19,7 +19,9 @@ Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan mem
 3. **Masukkan API Keys**: Klik "Setup API Keys" di sidebar untuk memasukkan API Keys Anda
 4. **Analisis Ide Konten**: Setelah mengatur keduanya, Anda dapat menggunakan fitur analisis ide konten
 
-⚠️ **Catatan Penting**: Kedua langkah pertama (API Keys dan Konteks Channel) harus dilakukan sebelum Anda dapat melakukan analisis.
+⚠️ **Catatan Penting**: 
+- Kedua langkah pertama (API Keys dan Konteks Channel) harus dilakukan sebelum Anda dapat melakukan analisis
+- Untuk hasil terbaik, lengkapi informasi tentang Top 3 Videos kamu di halaman Setup Channel
 
 ## Fitur Utama
 

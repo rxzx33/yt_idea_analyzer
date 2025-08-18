@@ -37,6 +37,13 @@ elif not channel_context_available:
     st.warning("📺 Informasi Channel belum diatur. Silakan masuk ke halaman 'Setup Channel Context' terlebih dahulu.")
     st.stop()
 
+# Additional check for top videos data
+channel_context = st.session_state.get('channel_context', {})
+top_videos = channel_context.get('top_videos', [])
+if len(top_videos) < 3 or not all(video.get('title') and video.get('views') and video.get('topic') for video in top_videos):
+    st.warning("📋 Informasi Top 3 Videos belum lengkap. Silakan lengkapi di halaman 'Setup Channel Context' untuk hasil analisis yang lebih akurat.")
+    st.info("Minimal lengkapi judul, jumlah penayangan, dan topik untuk ketiga video terbaik kamu.")
+
 # Get API keys from session state
 yt_api_key = st.session_state.yt_api_key
 gemini_api_key = st.session_state.gemini_api_key

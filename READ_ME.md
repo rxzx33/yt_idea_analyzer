@@ -25,7 +25,7 @@ Your API keys are stored locally in your browser session and are never sent to a
 2. Navigate to the "Setup API Keys" page
 3. Enter and save your API keys (they'll be stored in your browser session)
 4. Navigate to the "Setup Channel Context" page
-5. Enter and save your channel information for personalized analysis
+5. Enter and save your channel information for personalized analysis (including your Top 3 Videos)
 6. Go to the "Analyze Content" page
 7. Input your YouTube Shorts content idea in the text field
 8. Choose whether to filter results for Shorts content only
@@ -33,7 +33,9 @@ Your API keys are stored locally in your browser session and are never sent to a
 10. Wait for the analysis to complete
 11. View the AI-generated recommendations and insights
 
-⚠️ **Important**: Both API Keys and Channel Context must be set up before you can perform content analysis.
+⚠️ **Important**: 
+- Both API Keys and Channel Context must be set up before you can perform content analysis
+- For best results, complete the Top 3 Videos information in your channel context
 
 ## Getting API Keys
 

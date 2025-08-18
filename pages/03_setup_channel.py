@@ -90,8 +90,8 @@ with st.form("channel_context_form"):
         help="Pembagian gender penonton (contoh: Male 60%, Female 40%)"
     )
     
-    st.subheader("🏆 Top 3 Videos (Opsional)")
-    st.markdown("Masukkan informasi tentang 3 video terbaik kamu untuk membantu AI memahami konten kamu.")
+    st.subheader("🏆 Top 3 Videos (Direkomendasikan)")
+    st.markdown("Masukkan informasi tentang 3 video terbaik kamu untuk membantu AI memahami konten kamu dan memberikan rekomendasi yang lebih akurat. Ini sangat membantu AI dalam menganalisis potensi ide konten baru.")
     
     top_videos = []
     for i in range(3):
@@ -100,14 +100,17 @@ with st.form("channel_context_form"):
         with col1:
             title = st.text_input(f"Judul Video #{i+1}", 
                                 value=st.session_state.channel_context["top_videos"][i]["title"] if i < len(st.session_state.channel_context["top_videos"]) else "",
+                                placeholder="Contoh: 5 Fakta Misteri Yang Belum Terpecahkan",
                                 key=f"title_{i}")
         with col2:
             views = st.text_input(f"Penayangan #{i+1}", 
                                 value=st.session_state.channel_context["top_videos"][i]["views"] if i < len(st.session_state.channel_context["top_videos"]) else "",
+                                placeholder="Contoh: 10000",
                                 key=f"views_{i}")
         with col3:
             topic = st.text_input(f"Topik #{i+1}", 
                                 value=st.session_state.channel_context["top_videos"][i]["topic"] if i < len(st.session_state.channel_context["top_videos"]) else "",
+                                placeholder="Contoh: Misteri Dunia",
                                 key=f"topic_{i}")
         
         if title and views and topic:
@@ -117,7 +120,7 @@ with st.form("channel_context_form"):
                 "topic": topic
             })
     
-    submitted = st.form_submit_button("💾 Simpan Informasi Channel")
+    submitted = st.form_submit_button("Simpan Informasi Channel")
     
     if submitted:
         # Update session state with new channel context
@@ -147,6 +150,12 @@ Data channel kamu digunakan untuk:
 1. **Personalisasi Rekomendasi**: AI akan memberikan rekomendasi yang sesuai dengan niche dan audiens kamu
 2. **Analisis Kompetitif**: Membandingkan potensi ide konten dengan performa video kamu sebelumnya
 3. **Strategi Konten**: Memberikan saran yang relevan dengan gaya dan topik yang sudah kamu kuasai
+
+📋 **Mengapa Top 3 Videos Penting**:
+Informasi tentang video terbaik kamu sangat membantu AI untuk:
+- Memahami jenis konten yang berhasil di channel kamu
+- Mengidentifikasi pola dan elemen yang menarik bagi audiens kamu
+- Memberikan rekomendasi yang sesuai dengan gaya konten kamu
 
 🔒 **Privasi**: Data ini hanya disimpan di session browser kamu dan tidak akan dikirim ke server manapun.
 
