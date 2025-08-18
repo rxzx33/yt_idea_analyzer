@@ -1,4 +1,11 @@
 import streamlit as st
+
+st.set_page_config(
+    page_title="Setup Channel Context - YouTube Shorts Idea Analyzer",
+    page_icon="📺",
+    layout="centered"
+)
+
 from streamlit_cookies_manager import EncryptedCookieManager
 
 cookies = EncryptedCookieManager(
@@ -8,12 +15,6 @@ cookies = EncryptedCookieManager(
 
 if not cookies.ready():
     st.stop()
-
-st.set_page_config(
-    page_title="Setup Channel Context - YouTube Shorts Idea Analyzer",
-    page_icon="📺",
-    layout="centered"
-)
 
 st.title("📺 Setup Channel Context")
 

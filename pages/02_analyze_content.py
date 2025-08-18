@@ -1,4 +1,11 @@
 import streamlit as st
+
+st.set_page_config(
+    page_title="Analisis Ide Konten - YouTube Shorts Idea Analyzer",
+    page_icon="📊",
+    layout="wide"
+)
+
 from googleapiclient.discovery import build
 import google.generativeai as genai
 from google.generativeai import GenerativeModel
@@ -30,12 +37,6 @@ from main import (
     get_video_details,
     video_analysis,
     safe_int_convert
-)
-
-st.set_page_config(
-    page_title="Analisis Ide Konten - YouTube Shorts Idea Analyzer",
-    page_icon="📊",
-    layout="wide"
 )
 
 st.title("📊 Analisis Ide Konten YouTube Shorts")

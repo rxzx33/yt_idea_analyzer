@@ -1,4 +1,11 @@
 import streamlit as st
+
+st.set_page_config(
+    page_title="Setup API Keys - YouTube Shorts Idea Analyzer",
+    page_icon="🔑",
+    layout="centered"
+)
+
 from googleapiclient.discovery import build
 import google.generativeai as genai
 from streamlit_cookies_manager import EncryptedCookieManager
@@ -11,12 +18,6 @@ cookies = EncryptedCookieManager(
 if not cookies.ready():
     st.stop()
 
-st.set_page_config(
-    page_title="Setup API Keys - YouTube Shorts Idea Analyzer",
-    page_icon="🔑",
-    layout="centered"
-)
-
 st.title("🔑 Setup API Keys")
 
 st.markdown("""
@@ -28,10 +29,17 @@ API Keys kamu akan disimpan secara lokal di browser kamu dan tidak akan dikirim 
 """)
 
 # Initialize session state for API keys if not already present
-if 'yt_api_key' not in st.session_state and cookies.get("yt_api_key"):
-    st.session_state.yt_api_key = cookies.get("yt_api_key")
-if 'gemini_api_key' not in st.session_state and cookies.get("gemini_api_key"):
-    st.session_state.gemini_api_key = cookies.get("gemini_api_key")
+if 'yt_api_key' not in st.session_state:
+    if cookies.get("yt_api_key"):
+        st.session_state.yt_api_key = cookies.get("yt_api_key")
+    else:
+        st.session_state.yt_api_key = ""
+
+if 'gemini_api_key' not in st.session_state:
+    if cookies.get("gemini_api_key"):
+        st.session_state.gemini_api_key = cookies.get("gemini_api_key")
+    else:
+        st.session_state.gemini_api_key = ""
 
 # Create form for API key entry
 with st.form("api_keys_form"):
