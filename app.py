@@ -1,7 +1,12 @@
 import streamlit as st
 
-st.title("YouTube Shorts Idea Analyzer")
-st.write("made by Rizal Bintang")
+st.set_page_config(
+    page_title="YouTube Shorts Idea Analyzer",
+    page_icon="📺",
+    layout="wide"
+)
+
+st.title("📺 YouTube Shorts Idea Analyzer")
 
 st.markdown("""
 Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan memberikan feedback berdasarkan potensinya.

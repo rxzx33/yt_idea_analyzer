@@ -1,3 +1,4 @@
+# Main functions for YouTube Shorts Analyzer
 from googleapiclient.discovery import build
 import google.generativeai as genai
 from google.generativeai import GenerativeModel

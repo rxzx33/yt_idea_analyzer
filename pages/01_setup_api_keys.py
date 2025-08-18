@@ -1,5 +1,7 @@
 import streamlit as st
+import json
 
+# Page 1: Setup API Keys
 st.set_page_config(
     page_title="Setup API Keys - YouTube Shorts Idea Analyzer",
     page_icon="🔑",

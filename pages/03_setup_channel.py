@@ -1,5 +1,7 @@
 import streamlit as st
+import json
 
+# Page 3: Setup Channel Context
 st.set_page_config(
     page_title="Setup Channel Context - YouTube Shorts Idea Analyzer",
     page_icon="📺",
@@ -154,7 +156,8 @@ with st.form("channel_context_form"):
             "total_views_365_days": total_views_365_days,
             "content_type": "shorts"
         }
-        cookies["channel_context"] = st.session_state.channel_context
+        # Convert to JSON string before saving to cookies
+        cookies["channel_context"] = json.dumps(st.session_state.channel_context)
         cookies.save()
         st.success("✅ Informasi channel berhasil disimpan!")
         st.info("Sekarang kamu bisa masuk ke halaman 'Analisis Ide Konten' untuk menggunakan informasi channel ini.")

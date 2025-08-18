@@ -1,5 +1,14 @@
 import streamlit as st
 
+# Page 2: Analyze Content
+# Import functions from main.py BEFORE any other operations
+from main import (
+    search_youtube_videos,
+    get_video_details,
+    video_analysis,
+    safe_int_convert
+)
+
 st.set_page_config(
     page_title="Analisis Ide Konten - YouTube Shorts Idea Analyzer",
     page_icon="📊",
@@ -29,15 +38,12 @@ if 'gemini_api_key' not in st.session_state and cookies.get("gemini_api_key"):
     st.session_state.gemini_api_key = cookies.get("gemini_api_key")
 
 if 'channel_context' not in st.session_state and cookies.get("channel_context"):
-    st.session_state.channel_context = cookies.get("channel_context")
-
-# Import functions from main.py
-from main import (
-    search_youtube_videos,
-    get_video_details,
-    video_analysis,
-    safe_int_convert
-)
+    # Load channel context from cookies (stored as JSON string)
+    channel_context_json = cookies.get("channel_context")
+    try:
+        st.session_state.channel_context = json.loads(channel_context_json)
+    except (json.JSONDecodeError, TypeError):
+        st.session_state.channel_context = None
 
 st.title("📊 Analisis Ide Konten YouTube Shorts")
 
