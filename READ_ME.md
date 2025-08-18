@@ -9,7 +9,7 @@ This application now features a multi-page interface for better user experience:
 1. **Home Page** - Overview and instructions
 2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis (uses generic placeholders by default)
 3. **Setup API Keys** - Securely enter and store your API keys
-4. **Analyze Content** - Perform content analysis using your API keys and channel context
+4. **Analyze Content** - Perform content analysis using your API keys and channel context (requires both to be set up)
 
 ## Important Note About API Keys
 
@@ -19,17 +19,21 @@ This application requires you to provide your own API keys for:
 
 Your API keys are stored locally in your browser session and are never sent to any server, ensuring that API costs are associated with your own account.
 
-## How to Use This Application
+## Cara Menggunakan Aplikasi Ini
 
 1. Get your YouTube Data API and Google Gemini API keys (instructions below)
 2. Navigate to the "Setup API Keys" page
 3. Enter and save your API keys (they'll be stored in your browser session)
-4. Go to the "Analyze Content" page
-5. Input your YouTube Shorts content idea in the text field
-6. Choose whether to filter results for Shorts content only
-7. Click "Analisa Ide Konten" (Analyze Content Idea)
-8. Wait for the analysis to complete
-9. View the AI-generated recommendations and insights
+4. Navigate to the "Setup Channel Context" page
+5. Enter and save your channel information for personalized analysis
+6. Go to the "Analyze Content" page
+7. Input your YouTube Shorts content idea in the text field
+8. Choose whether to filter results for Shorts content only
+9. Click "Analisa Ide Konten" (Analyze Content Idea)
+10. Wait for the analysis to complete
+11. View the AI-generated recommendations and insights
+
+⚠️ **Important**: Both API Keys and Channel Context must be set up before you can perform content analysis.
 
 ## Getting API Keys
 

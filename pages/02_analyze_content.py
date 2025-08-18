@@ -22,14 +22,27 @@ st.set_page_config(
 
 st.title("📊 Analisis Ide Konten YouTube Shorts")
 
-# Check if API keys are available
-if not st.session_state.get('yt_api_key') or not st.session_state.get('gemini_api_key'):
+# Check if both API keys and channel context are available
+api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
+channel_context_available = st.session_state.get('channel_context') is not None
+
+if not api_keys_available and not channel_context_available:
+    st.warning("🔐 Baik API Keys maupun Informasi Channel belum diatur.")
+    st.info("Silakan masuk ke halaman 'Setup API Keys' dan 'Setup Channel Context' terlebih dahulu.")
+    st.stop()
+elif not api_keys_available:
     st.warning("🔑 API Keys belum diatur. Silakan masuk ke halaman 'Setup API Keys' terlebih dahulu.")
+    st.stop()
+elif not channel_context_available:
+    st.warning("📺 Informasi Channel belum diatur. Silakan masuk ke halaman 'Setup Channel Context' terlebih dahulu.")
     st.stop()
 
 # Get API keys from session state
 yt_api_key = st.session_state.yt_api_key
 gemini_api_key = st.session_state.gemini_api_key
+
+# Get channel context from session state
+channel_context_data = st.session_state.get('channel_context')
 
 # Content analysis form
 with st.form("content_analysis_form"):
@@ -117,24 +130,8 @@ with st.form("content_analysis_form"):
                                     - Video dengan engagement rate yang lebih tinggi menunjukkan potensi yang lebih baik untuk ide konten Anda
                                     """)
                                 
-                                # Prepare channel context data from session state or use generic default
-                                channel_context_data = st.session_state.get('channel_context', {
-                                    "subscriber_count": 0,
-                                    "top_videos": [
-                                        {"title": "Video pertama kamu", "views": "0", "topic": "Topik video"},
-                                        {"title": "Video kedua kamu", "views": "0", "topic": "Topik video"},
-                                        {"title": "Video ketiga kamu", "views": "0", "topic": "Topik video"}
-                                    ],
-                                    "target_audience": {
-                                        "age_range": "Contoh: 18-24, 25-34",
-                                        "geography": "Contoh: Indonesia, Jakarta",
-                                        "interests": "Contoh: Teknologi, Hiburan, Edukasi",
-                                        "gender_split": "Contoh: Male 60%, Female 40%"
-                                    },
-                                    "niche": "Contoh: Edutainment, Gaming, Kuliner",
-                                    "total_views_365_days": 0,
-                                    "content_type": "shorts"
-                                })
+                                # Use channel context data from session state (already validated above)
+                                # We don't need a fallback here since we've already checked for its existence
                                 
                                 # Prepare LLM prompt
                                 llm_prompt = f"""
