@@ -2,23 +2,33 @@
 
 This application helps analyze YouTube Shorts content ideas by examining trending videos and providing insights using YouTube Data API and Google Gemini.
 
+## Multi-Page Interface
+
+This application now features a multi-page interface for better user experience:
+
+1. **Home Page** - Overview and instructions
+2. **Setup API Keys** - Securely enter and store your API keys
+3. **Analyze Content** - Perform content analysis using your API keys
+
 ## Important Note About API Keys
 
 This application requires you to provide your own API keys for:
 1. YouTube Data API - to search for and analyze YouTube videos
 2. Google Gemini API - to generate content recommendations
 
-You'll need to enter these keys each time you use the application. This ensures that API costs are associated with your own account rather than the app owner's account.
+Your API keys are stored locally in your browser session and are never sent to any server, ensuring that API costs are associated with your own account.
 
 ## How to Use This Application
 
 1. Get your YouTube Data API and Google Gemini API keys (instructions below)
-2. Enter your API keys in the application interface
-3. Input your YouTube Shorts content idea in the text field
-4. Choose whether to filter results for Shorts content only
-5. Click "Analisa Ide Konten" (Analyze Content Idea)
-6. Wait for the analysis to complete
-7. View the AI-generated recommendations and insights
+2. Navigate to the "Setup API Keys" page
+3. Enter and save your API keys (they'll be stored in your browser session)
+4. Go to the "Analyze Content" page
+5. Input your YouTube Shorts content idea in the text field
+6. Choose whether to filter results for Shorts content only
+7. Click "Analisa Ide Konten" (Analyze Content Idea)
+8. Wait for the analysis to complete
+9. View the AI-generated recommendations and insights
 
 ## Getting API Keys
 
@@ -45,7 +55,6 @@ If you want to deploy this application yourself:
 4. Select your repository when creating a new app
 5. Set the main file as `app.py`
 6. Click "Deploy!"
-7. When using the app, you'll still need to enter your own API keys each time
 
 ## Local Development
 
@@ -60,4 +69,4 @@ To run this app locally:
    ```
    streamlit run app.py
    ```
-4. Enter your API keys when prompted
+4. Navigate between pages using the sidebar
