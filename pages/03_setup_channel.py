@@ -2,61 +2,83 @@ import streamlit as st
 from googleapiclient.discovery import build
 
 # Function to fetch channel information using YouTube API
-def fetch_channel_info(api_key):
+def fetch_channel_info(api_key, channel_identifier):
     try:
         youtube = build('youtube', 'v3', developerKey=api_key)
         
-        # For API key-only access, we need to search for the channel first
-        # This approach requires the user to know their channel name or ID
-        st.info("ℹ️ To auto-fetch channel information, please enter your channel name or ID below:")
-        channel_identifier = st.text_input("Channel Name or ID", placeholder="e.g., @YourChannelName or UCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        # Store the original identifier for error messages
+        original_identifier = channel_identifier
         
-        if not channel_identifier:
-            return None
-            
-        # Try to find channel by username/handle first
+        # Clean up the identifier if needed
+        channel_identifier = channel_identifier.strip()
+        
+        # If it's a handle, we need to search for it
         if channel_identifier.startswith('@'):
-            # Handle format (new YouTube format)
+            # Search for channels by handle
             search_response = youtube.search().list(
                 part='snippet',
                 type='channel',
                 q=channel_identifier,
-                maxResults=1
+                maxResults=5  # Get more results to increase chances of finding the right one
             ).execute()
+            
+            # Look for exact handle match
+            channel_items = search_response.get('items', [])
+            channel_id = None
+            
+            for item in channel_items:
+                if item.get('snippet', {}).get('channelTitle', '').lower() == channel_identifier.lower():
+                    channel_id = item['id']['channelId']
+                    break
+            
+            # If we didn't find exact match, try the first result
+            if not channel_id and channel_items:
+                channel_id = channel_items[0]['id']['channelId']
+                
         else:
-            # Try as channel ID or name
+            # Try as channel ID directly first
             try:
-                # First try as channel ID
                 channel_response = youtube.channels().list(
                     part='snippet,statistics',
                     id=channel_identifier
                 ).execute()
+                
                 if channel_response.get('items'):
-                    search_response = channel_response
+                    channel_id = channel_identifier
                 else:
-                    # If that fails, search by name
+                    # If that fails, search by name/title
                     search_response = youtube.search().list(
                         part='snippet',
                         type='channel',
                         q=channel_identifier,
-                        maxResults=1
+                        maxResults=5
                     ).execute()
+                    
+                    channel_items = search_response.get('items', [])
+                    if channel_items:
+                        channel_id = channel_items[0]['id']['channelId']
+                    else:
+                        channel_id = None
             except:
-                # Fallback to search
+                # Fallback to search if direct ID access fails
                 search_response = youtube.search().list(
                     part='snippet',
                     type='channel',
                     q=channel_identifier,
-                    maxResults=1
+                    maxResults=5
                 ).execute()
+                
+                channel_items = search_response.get('items', [])
+                if channel_items:
+                    channel_id = channel_items[0]['id']['channelId']
+                else:
+                    channel_id = None
         
-        if not search_response.get('items'):
-            st.warning("⚠️ Could not find channel with that identifier. Please check and try again.")
+        if not channel_id:
+            st.warning(f"⚠️ Could not find channel with identifier: {original_identifier}. Please check the spelling or try a different identifier.")
+            st.info("💡 Tips:\n- For handles: Use the exact format like @ChannelName\n- For channel IDs: They start with 'UC' followed by alphanumeric characters\n- Try searching for your channel on YouTube to confirm the correct identifier")
             return None
             
-        channel_item = search_response['items'][0]
-        channel_id = channel_item['id']['channelId'] if 'channelId' in channel_item['id'] else channel_item['id']
-        
         # Get detailed channel statistics
         channel_response = youtube.channels().list(
             part='snippet,statistics',
@@ -64,6 +86,7 @@ def fetch_channel_info(api_key):
         ).execute()
         
         if not channel_response.get('items'):
+            st.warning(f"⚠️ Could not retrieve details for channel ID: {channel_id}")
             return None
             
         channel_data = channel_response['items'][0]
@@ -85,6 +108,7 @@ def fetch_channel_info(api_key):
         return channel_info
     except Exception as e:
         st.error(f"Error fetching channel info: {str(e)}")
+        st.info("💡 Please make sure:\n- Your YouTube API key is valid\n- The channel identifier is correct\n- The channel is public (private channels cannot be accessed)")
         return None
 
 # Function to fetch top videos for the channel
@@ -106,7 +130,12 @@ def fetch_top_videos(api_key, channel_id=None):
         ).execute()
         
         top_videos = []
-        video_ids = [item['id']['videoId'] for item in search_response.get('items', []) if item.get('id', {}).get('videoId')]
+        video_items = search_response.get('items', [])
+        
+        if not video_items:
+            return []
+            
+        video_ids = [item['id']['videoId'] for item in video_items if item.get('id', {}).get('videoId')]
         
         if video_ids:
             # Get detailed video statistics
@@ -128,6 +157,7 @@ def fetch_top_videos(api_key, channel_id=None):
         return top_videos
     except Exception as e:
         st.error(f"Error fetching top videos: {str(e)}")
+        st.info("💡 This might happen if:\n- The channel has no public videos\n- The channel ID is incorrect\n- There are temporary API issues")
         return []
 
 st.set_page_config(
@@ -152,7 +182,7 @@ if st.session_state.get('yt_api_key'):
     
     if st.button("🔍 Auto-fetch Channel Information") and channel_identifier:
         with st.spinner("Fetching channel information..."):
-            channel_info = fetch_channel_info(st.session_state['yt_api_key'])
+            channel_info = fetch_channel_info(st.session_state['yt_api_key'], channel_identifier)
             if channel_info:
                 # Update session state with fetched information
                 st.session_state.channel_context.update({
@@ -160,16 +190,20 @@ if st.session_state.get('yt_api_key'):
                     "total_views_365_days": channel_info['view_count'],  # Approximation
                     "niche": "Please specify your niche",  # We can't determine this automatically
                 })
-                st.success("✅ Channel information fetched successfully!")
+                st.success(f"✅ Channel information fetched successfully for: {channel_info['title']}")
                 st.info("Please review and complete the information below, especially the audience details and niche.")
                 
                 # Try to fetch top videos
-                top_videos = fetch_top_videos(st.session_state['yt_api_key'], channel_info['id'])
-                if top_videos:
-                    st.session_state.channel_context["top_videos"] = top_videos
-                    st.success("✅ Top videos fetched successfully!")
+                with st.spinner("Fetching top videos..."):
+                    top_videos = fetch_top_videos(st.session_state['yt_api_key'], channel_info['id'])
+                    if top_videos:
+                        st.session_state.channel_context["top_videos"] = top_videos
+                        st.success("✅ Top videos fetched successfully!")
+                    else:
+                        st.warning("⚠️ Could not fetch top videos. You can still enter them manually below.")
             else:
-                st.warning("⚠️ Could not fetch channel information. Please check your channel identifier or enter information manually.")
+                st.error("❌ Could not fetch channel information. Please check your channel identifier or enter information manually.")
+                st.info("💡 Troubleshooting tips:\n- Make sure your channel identifier is correct\n- Ensure your channel is public\n- Verify your YouTube API key is valid")
 else:
     st.info("ℹ️ Set up your API keys first in the 'Setup API Keys' page to enable auto-fetching of channel information.")
 
