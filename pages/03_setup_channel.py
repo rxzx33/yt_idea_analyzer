@@ -6,12 +6,6 @@ cookies = EncryptedCookieManager(
     password = st.secrets["COOKIE_ENCRYPTION_PASSWORD"]
 )
 
-st.set_page_config(
-    page_title="YouTube Shorts Idea Analyzer",
-    page_icon="📺",
-    layout="wide"
-)
-
 if not cookies.ready():
     st.stop()
 
