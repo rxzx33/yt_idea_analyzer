@@ -117,22 +117,22 @@ with st.form("content_analysis_form"):
                                     - Video dengan engagement rate yang lebih tinggi menunjukkan potensi yang lebih baik untuk ide konten Anda
                                     """)
                                 
-                                # Prepare channel context data from session state or use default
+                                # Prepare channel context data from session state or use generic default
                                 channel_context_data = st.session_state.get('channel_context', {
-                                    "subscriber_count": 47,
+                                    "subscriber_count": 0,
                                     "top_videos": [
-                                        {"title": "Perpustakaan Terlarang di Vatikan", "views": "3200", "topic": "Sejarah & Misteri"},
-                                        {"title": "Misteri Garis Nasca: Teka-teki Raksasa di Padang Pasir", "views": "1800", "topic": "Misteri"},
-                                        {"title": "Olympus Mount: Gunung Terbesar di Tata Surya", "views": "1300", "topic": "Edutainment"}
+                                        {"title": "Video pertama kamu", "views": "0", "topic": "Topik video"},
+                                        {"title": "Video kedua kamu", "views": "0", "topic": "Topik video"},
+                                        {"title": "Video ketiga kamu", "views": "0", "topic": "Topik video"}
                                     ],
                                     "target_audience": {
-                                        "age_range": "25-34",
-                                        "geography": "Indonesia, Malaysia",
-                                        "interests": "Sejarah, Misteri, Sains, dan Edutainment",
-                                        "gender_split": "Male 74%, Female 26%"
+                                        "age_range": "Contoh: 18-24, 25-34",
+                                        "geography": "Contoh: Indonesia, Jakarta",
+                                        "interests": "Contoh: Teknologi, Hiburan, Edukasi",
+                                        "gender_split": "Contoh: Male 60%, Female 40%"
                                     },
-                                    "niche": "Edutainment dan Misteri",
-                                    "total_views_365_days": 35000,
+                                    "niche": "Contoh: Edutainment, Gaming, Kuliner",
+                                    "total_views_365_days": 0,
                                     "content_type": "shorts"
                                 })
                                 

@@ -11,25 +11,28 @@ st.title("📺 Setup Channel Context")
 st.markdown("""
 Atur konteks channel YouTube kamu untuk membuat analisis lebih akurat dan relevan dengan channel kamu.
 Informasi ini akan digunakan oleh AI untuk memberikan rekomendasi yang lebih tepat sasaran.
+
+ℹ️ **Catatan**: Data default di bawah ini hanyalah contoh. Harap ganti dengan informasi channel kamu sendiri untuk hasil yang lebih akurat.
 """)
 
 # Initialize session state for channel context if not already present
+# Using generic placeholder data that users should customize
 if 'channel_context' not in st.session_state:
     st.session_state.channel_context = {
-        "subscriber_count": 47,
+        "subscriber_count": 0,
         "top_videos": [
-            {"title": "Perpustakaan Terlarang di Vatikan", "views": "3200", "topic": "Sejarah & Misteri"},
-            {"title": "Misteri Garis Nasca: Teka-teki Raksasa di Padang Pasir", "views": "1800", "topic": "Misteri"},
-            {"title": "Olympus Mount: Gunung Terbesar di Tata Surya", "views": "1300", "topic": "Edutainment"}
+            {"title": "Video pertama kamu", "views": "0", "topic": "Topik video"},
+            {"title": "Video kedua kamu", "views": "0", "topic": "Topik video"},
+            {"title": "Video ketiga kamu", "views": "0", "topic": "Topik video"}
         ],
         "target_audience": {
-            "age_range": "25-34",
-            "geography": "Indonesia, Malaysia",
-            "interests": "Sejarah, Misteri, Sains, dan Edutainment",
-            "gender_split": "Male 74%, Female 26%"
+            "age_range": "Contoh: 18-24, 25-34",
+            "geography": "Contoh: Indonesia, Jakarta",
+            "interests": "Contoh: Teknologi, Hiburan, Edukasi",
+            "gender_split": "Contoh: Male 60%, Female 40%"
         },
-        "niche": "Edutainment dan Misteri",
-        "total_views_365_days": 35000,
+        "niche": "Contoh: Edutainment, Gaming, Kuliner",
+        "total_views_365_days": 0,
         "content_type": "shorts"
     }
 
@@ -146,4 +149,6 @@ Data channel kamu digunakan untuk:
 3. **Strategi Konten**: Memberikan saran yang relevan dengan gaya dan topik yang sudah kamu kuasai
 
 🔒 **Privasi**: Data ini hanya disimpan di session browser kamu dan tidak akan dikirim ke server manapun.
+
+⚠️ **Penting**: Data default yang ditampilkan hanyalah contoh. Harap masukkan data channel kamu sendiri untuk hasil analisis yang akurat.
 """)

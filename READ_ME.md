@@ -7,7 +7,7 @@ This application helps analyze YouTube Shorts content ideas by examining trendin
 This application now features a multi-page interface for better user experience:
 
 1. **Home Page** - Overview and instructions
-2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis
+2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis (uses generic placeholders by default)
 3. **Setup API Keys** - Securely enter and store your API keys
 4. **Analyze Content** - Perform content analysis using your API keys and channel context
 
@@ -45,6 +45,15 @@ Your API keys are stored locally in your browser session and are never sent to a
 2. Sign in with your Google account
 3. Navigate to "Get API key in Google Cloud"
 4. Create and copy your API key
+
+## Privacy & Data Security
+
+This application prioritizes your privacy:
+
+- **No Server Storage**: All data (API keys, channel context) is stored locally in your browser session
+- **Generic Placeholders**: Default channel data uses generic placeholders, not real user data
+- **No Tracking**: The application does not track or collect any personal information
+- **Transparent**: All data handling is clearly explained in the application
 
 ## Deploying to Streamlit Community Cloud
 

@@ -24,7 +24,13 @@ Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan mem
 - **Analisis Potensi Konten**: Menganalisis performa konten berdasarkan data video yang sedang tren
 - **Rekomendasi AI Personalisasi**: Memberikan rekomendasi berbasis AI menggunakan Google Gemini yang disesuaikan dengan channel kamu
 - **Insight Kompetitor**: Menampilkan informasi tentang kompetitor dan performa video sejenis
-- **Personalisasi Channel**: Sesuaikan analisis dengan informasi spesifik tentang channel kamu
+- **Personalisasi Channel**: Sesuaikan analisis dengan informasi spesifik tentang channel kamu (menggunakan placeholder data yang aman)
+
+## Privasi Data
+
+- Semua data channel yang dimasukkan hanya disimpan di browser kamu
+- Tidak ada data pribadi yang dikirim atau disimpan di server
+- Data placeholder default tidak mengandung informasi pribadi apapun
 
 ## Kebijakan Penggunaan
 
