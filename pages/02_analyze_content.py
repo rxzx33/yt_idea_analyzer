@@ -5,6 +5,30 @@ from google.generativeai import GenerativeModel
 from datetime import datetime
 import json
 import textwrap
+from streamlit_cookies_manager import EncryptedCookieManager
+
+cookies = EncryptedCookieManager(
+    prefix = "yt_shorts_analyzer",
+    password = st.secrets["COOKIE_ENCRYPTION_PASSWORD"]
+)
+
+st.set_page_config(
+    page_title="YouTube Shorts Idea Analyzer",
+    page_icon="📺",
+    layout="wide"
+)
+
+if not cookies.ready():
+    st.stop()
+
+if 'yt_api_key' not in st.session_state and cookies.get("yt_api_key"):
+    st.session_state.yt_api_key = cookies.get("yt_api_key")
+
+if 'gemini_api_key' not in st.session_state and cookies.get("gemini_api_key"):
+    st.session_state.gemini_api_key = cookies.get("gemini_api_key")
+
+if 'channel_context' not in st.session_state and cookies.get("channel_context"):
+    st.session_state.channel_context = cookies.get("channel_context")
 
 # Import functions from main.py
 from main import (
@@ -22,7 +46,7 @@ st.set_page_config(
 
 st.title("📊 Analisis Ide Konten YouTube Shorts")
 
-# Check if both API keys and channel context are available
+# Check if API keys and channel context are available
 api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
 channel_context_available = st.session_state.get('channel_context') is not None
 
@@ -37,19 +61,19 @@ elif not channel_context_available:
     st.warning("📺 Informasi Channel belum diatur. Silakan masuk ke halaman 'Setup Channel Context' terlebih dahulu.")
     st.stop()
 
-# Additional check for top videos data
+# Get channel context from session state
 channel_context = st.session_state.get('channel_context', {})
+
+# Second gatekepper to ensure accuracy in AI analysis by checking top videos
 top_videos = channel_context.get('top_videos', [])
-if len(top_videos) < 3 or not all(video.get('title') and video.get('views') and video.get('topic') for video in top_videos):
-    st.warning("📋 Informasi Top 3 Videos belum lengkap. Silakan lengkapi di halaman 'Setup Channel Context' untuk hasil analisis yang lebih akurat.")
-    st.info("Minimal lengkapi judul, jumlah penayangan, dan topik untuk ketiga video terbaik kamu.")
+
+if not top_videos:
+    st.warning("Top videos tidak ditemukan. Mohon periksa kembali informasi channel dan coba lagi.")
+    st.stop()
 
 # Get API keys from session state
 yt_api_key = st.session_state.yt_api_key
 gemini_api_key = st.session_state.gemini_api_key
-
-# Get channel context from session state
-channel_context_data = st.session_state.get('channel_context')
 
 # Content analysis form
 with st.form("content_analysis_form"):
@@ -151,7 +175,7 @@ with st.form("content_analysis_form"):
                                 ---
                                 
                                 Konteks channel YouTube saya untuk kebutuhan untuk analisis ini:
-                                {json.dumps(channel_context_data, indent=2)}
+                                {json.dumps(channel_context, indent=2)}
                                 
                                 ---
 

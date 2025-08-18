@@ -16,7 +16,6 @@ API_KEY = os.getenv('YOUTUBE_API_KEY')
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 def get_youtube_service():
-    """Creates a YouTube service object."""
     if not API_KEY:
         print("ERROR: API Key tidak ditemukan. Silahkan masukan API Key Anda.")
         return None
@@ -33,7 +32,6 @@ def get_youtube_service():
         return None
     
 def get_gemini_model():
-    """Creates a Gemini service object."""
     if not GEMINI_API_KEY:
         print("ERROR: Gemini API Key tidak ditemukan. Silahkan masukan API Key Anda.")
         return None

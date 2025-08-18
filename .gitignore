@@ -140,4 +140,4 @@ Thumbs.db
 .idea/
 
 # Streamlit
-
+.streamlit/secrets.toml

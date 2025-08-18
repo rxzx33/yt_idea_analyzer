@@ -1,4 +1,21 @@
 import streamlit as st
+from googleapiclient.discovery import build
+import google.generativeai as genai
+from streamlit_cookies_manager import EncryptedCookieManager
+
+cookies = EncryptedCookieManager(
+    prefix = "yt_shorts_analyzer",
+    password = st.secrets["COOKIE_ENCRYPTION_PASSWORD"]
+)
+
+st.set_page_config(
+    page_title="YouTube Shorts Idea Analyzer",
+    page_icon="📺",
+    layout="wide"
+)
+
+if not cookies.ready():
+    st.stop()
 
 st.set_page_config(
     page_title="Setup API Keys - YouTube Shorts Idea Analyzer",
@@ -17,10 +34,10 @@ API Keys kamu akan disimpan secara lokal di browser kamu dan tidak akan dikirim 
 """)
 
 # Initialize session state for API keys if not already present
-if 'yt_api_key' not in st.session_state:
-    st.session_state.yt_api_key = ""
-if 'gemini_api_key' not in st.session_state:
-    st.session_state.gemini_api_key = ""
+if 'yt_api_key' not in st.session_state and cookies.get("yt_api_key"):
+    st.session_state.yt_api_key = cookies.get("yt_api_key")
+if 'gemini_api_key' not in st.session_state and cookies.get("gemini_api_key"):
+    st.session_state.gemini_api_key = cookies.get("gemini_api_key")
 
 # Create form for API key entry
 with st.form("api_keys_form"):
@@ -46,10 +63,40 @@ with st.form("api_keys_form"):
     
     if submitted:
         if yt_api_key and gemini_api_key:
-            st.session_state.yt_api_key = yt_api_key
-            st.session_state.gemini_api_key = gemini_api_key
-            st.success("✅ API Keys berhasil disimpan!")
-            st.info("Sekarang kamu bisa masuk ke halaman 'Analisis Ide Konten' untuk mulai menggunakan aplikasi.")
+            yt_key_valid = False
+            gemini_key_valid = False
+            try:
+                youtube_service = build(
+                    'youtube',
+                    'v3',
+                    developerKey=yt_api_key
+                )
+                youtube_service.search().list(
+                    q='test',
+                    part='id',
+                    maxResults=1
+                )
+                yt_key_valid = True
+            except Exception as e:
+                st.error(f"❗ Gagal menghubungkan ke YouTube API: {e}")
+            try:
+                genai.configure(api_key=gemini_api_key)
+                model = genai.GenerativeModel('gemini-2.5-flash')
+                model.generate_content("test")
+                gemini_key_valid = True
+            except Exception as e:
+                st.error(f"❗ Gagal menghubungkan ke Gemini API: {e}")
+
+            if yt_key_valid and gemini_key_valid:
+                st.session_state.yt_api_key = yt_api_key
+                st.session_state.gemini_api_key = gemini_api_key
+                cookies["yt_api_key"] = yt_api_key
+                cookies["gemini_api_key"] = gemini_api_key
+                cookies.save()
+                st.success("✅ API Keys berhasil disimpan!")
+                st.info("Sekarang kamu bisa masuk ke halaman 'Analisis Ide Konten' untuk mulai menggunakan aplikasi.")
+            else:
+                st.error("❗ Gagal menyimpan API Keys. Pastikan kedua API Keys valid.")
         else:
             st.error("❗ Mohon masukkan kedua API Keys untuk melanjutkan.")
 

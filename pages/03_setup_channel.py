@@ -1,4 +1,19 @@
 import streamlit as st
+from streamlit_cookies_manager import EncryptedCookieManager
+
+cookies = EncryptedCookieManager(
+    prefix = "yt_shorts_analyzer",
+    password = st.secrets["COOKIE_ENCRYPTION_PASSWORD"]
+)
+
+st.set_page_config(
+    page_title="YouTube Shorts Idea Analyzer",
+    page_icon="📺",
+    layout="wide"
+)
+
+if not cookies.ready():
+    st.stop()
 
 st.set_page_config(
     page_title="Setup Channel Context - YouTube Shorts Idea Analyzer",
@@ -16,22 +31,23 @@ Informasi ini akan digunakan oleh AI untuk memberikan rekomendasi yang lebih tep
 """)
 
 # Initialize session state for channel context if not already present
-# Using generic placeholder data that users should customize
-if 'channel_context' not in st.session_state:
+if 'channel_context' not in st.session_state and cookies.get("channel_context"):
+    st.session_state.channel_context = cookies.get("channel_context")
+elif 'channel_context' not in st.session_state:
     st.session_state.channel_context = {
         "subscriber_count": 0,
         "top_videos": [
-            {"title": "Video pertama kamu", "views": "0", "topic": "Topik video"},
-            {"title": "Video kedua kamu", "views": "0", "topic": "Topik video"},
-            {"title": "Video ketiga kamu", "views": "0", "topic": "Topik video"}
+            {"title": "", "views": "", "topic": ""},
+            {"title": "", "views": "", "topic": ""},
+            {"title": "", "views": "", "topic": ""}
         ],
         "target_audience": {
-            "age_range": "Contoh: 18-24, 25-34",
-            "geography": "Contoh: Indonesia, Jakarta",
-            "interests": "Contoh: Teknologi, Hiburan, Edukasi",
-            "gender_split": "Contoh: Male 60%, Female 40%"
+            "age_range": "",
+            "geography": "",
+            "interests": "",
+            "gender_split": ""
         },
-        "niche": "Contoh: Edutainment, Gaming, Kuliner",
+        "niche": "",
         "total_views_365_days": 0,
         "content_type": "shorts"
     }
@@ -59,58 +75,64 @@ with st.form("channel_context_form"):
     niche = st.text_input(
         "Niche Channel", 
         value=st.session_state.channel_context["niche"],
-        help="Niche utama channel kamu (contoh: Edutainment, Gaming, Kuliner)"
+        help="Niche utama channel kamu (contoh: Edutainment, Gaming, Kuliner)",
+        placeholder="Contoh: Teknologi dan Gadget"
     )
     
     st.subheader("👥 Target Audience")
+    st.markdown("Informasi tentang target audiens bisa kamu peroleh dari YouTube Studio")
     
     col1, col2 = st.columns(2)
     with col1:
         age_range = st.text_input(
             "Rentang Usia", 
             value=st.session_state.channel_context["target_audience"]["age_range"],
-            help="Rentang usia utama penonton kamu (contoh: 18-24, 25-34)"
+            help="Rentang usia utama penonton kamu (contoh: 18-24, 25-34)",
+            placeholder="Contoh: 18-24 tahun"
         )
     with col2:
         geography = st.text_input(
             "Wilayah Geografis", 
             value=st.session_state.channel_context["target_audience"]["geography"],
-            help="Wilayah geografis utama penonton kamu (contoh: Indonesia, Jakarta)"
+            help="Wilayah geografis utama penonton kamu (contoh: Indonesia, Jakarta)",
+            placeholder="Contoh: Indonesia dan Malaysia"
         )
     
     interests = st.text_input(
         "Minat & Ketertarikan", 
         value=st.session_state.channel_context["target_audience"]["interests"],
-        help="Minat utama penonton kamu (contoh: Teknologi, Hiburan, Edukasi)"
+        help="Minat utama penonton kamu (contoh: Teknologi, Hiburan, Edukasi)",
+        placeholder="Contoh: Teknologi dan Hiburan"
     )
     
     gender_split = st.text_input(
         "Pembagian Gender", 
         value=st.session_state.channel_context["target_audience"]["gender_split"],
-        help="Pembagian gender penonton (contoh: Male 60%, Female 40%)"
+        help="Pembagian gender penonton",
+        placeholder="Contoh: Pria 60%, Wanita 40%"
     )
     
-    st.subheader("🏆 Top 3 Videos (Direkomendasikan)")
-    st.markdown("Masukkan informasi tentang 3 video terbaik kamu untuk membantu AI memahami konten kamu dan memberikan rekomendasi yang lebih akurat. Ini sangat membantu AI dalam menganalisis potensi ide konten baru.")
-    
+    st.subheader("🏆 Top 3 Videos")
+    st.markdown("Masukkan informasi tentang 3 video terbaik kamu untuk membantu AI memahami konten kamu dan memberikan rekomendasi yang lebih akurat.")
+
     top_videos = []
     for i in range(3):
         st.markdown(f"**Video #{i+1}**")
         col1, col2, col3 = st.columns(3)
         with col1:
             title = st.text_input(f"Judul Video #{i+1}", 
-                                value=st.session_state.channel_context["top_videos"][i]["title"] if i < len(st.session_state.channel_context["top_videos"]) else "",
+                                value=st.session_state.channel_context["top_videos"][i]["title"],
                                 placeholder="Contoh: 5 Fakta Misteri Yang Belum Terpecahkan",
                                 key=f"title_{i}")
         with col2:
             views = st.text_input(f"Penayangan #{i+1}", 
-                                value=st.session_state.channel_context["top_videos"][i]["views"] if i < len(st.session_state.channel_context["top_videos"]) else "",
+                                value=st.session_state.channel_context["top_videos"][i]["views"],
                                 placeholder="Contoh: 10000",
                                 key=f"views_{i}")
         with col3:
             topic = st.text_input(f"Topik #{i+1}", 
-                                value=st.session_state.channel_context["top_videos"][i]["topic"] if i < len(st.session_state.channel_context["top_videos"]) else "",
-                                placeholder="Contoh: Misteri Dunia",
+                                value=st.session_state.channel_context["top_videos"][i]["topic"],
+                                placeholder="Contoh: Sejarah dan Konspirasi",
                                 key=f"topic_{i}")
         
         if title and views and topic:
@@ -137,6 +159,8 @@ with st.form("channel_context_form"):
             "total_views_365_days": total_views_365_days,
             "content_type": "shorts"
         }
+        cookies["channel_context"] = st.session_state.channel_context
+        cookies.save()
         st.success("✅ Informasi channel berhasil disimpan!")
         st.info("Sekarang kamu bisa masuk ke halaman 'Analisis Ide Konten' untuk menggunakan informasi channel ini.")
 
