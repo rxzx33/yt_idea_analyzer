@@ -6,10 +6,9 @@ This application helps analyze YouTube Shorts content ideas by examining trendin
 
 This application now features a multi-page interface for better user experience:
 
-1. **Home Page** - Overview and instructions
+1. **Home Page** - Overview and instructions (now includes content analysis)
 2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis (uses generic placeholders by default)
 3. **Setup API Keys** - Securely enter and store your API keys
-4. **Analyze Content** - Perform content analysis using your API keys and channel context (requires both to be set up)
 
 ## Important Note About API Keys
 
@@ -21,17 +20,17 @@ Your API keys are stored locally in your browser session and are never sent to a
 
 ## Cara Menggunakan Aplikasi Ini
 
-1. Get your YouTube Data API and Google Gemini API keys (instructions below)
-2. Navigate to the "Setup API Keys" page
-3. Enter and save your API keys (they'll be stored in your browser session)
-4. Navigate to the "Setup Channel Context" page
-5. Enter and save your channel information for personalized analysis (including your Top 3 Videos)
-6. Go to the "Analyze Content" page
-7. Input your YouTube Shorts content idea in the text field
-8. Choose whether to filter results for Shorts content only
-9. Click "Analisa Ide Konten" (Analyze Content Idea)
-10. Wait for the analysis to complete
-11. View the AI-generated recommendations and insights
+1. Dapatkan kunci API YouTube Data API dan Google Gemini API Anda (instruksi di bawah)
+2. Navigasi ke halaman "Setup API Keys" di sidebar
+3. Masukkan dan simpan kunci API Anda (akan disimpan di sesi browser Anda)
+4. Navigasi ke halaman "Setup Channel Context" di sidebar
+5. Masukkan dan simpan informasi channel Anda untuk analisis yang dipersonalisasi (termasuk 3 Video Teratas Anda)
+6. Kembali ke halaman utama (Home Page)
+7. Masukkan ide konten YouTube Shorts Anda di kolom teks
+8. Pilih apakah akan memfilter hasil hanya untuk konten Shorts
+9. Klik "Analisa Ide Konten"
+10. Tunggu analisis selesai
+11. Lihat rekomendasi dan wawasan yang dihasilkan AI
 
 ⚠️ **Important**: 
 - Both API Keys and Channel Context must be set up before you can perform content analysis
