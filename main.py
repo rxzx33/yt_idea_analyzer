@@ -54,18 +54,6 @@ def get_gemini_model():
     
 # This block is to search for videos based on the topic query
 def search_youtube_videos(youtube_service, query, max_results=20):
-    """
-    Searches YouTube for videos based on a query.
-
-    Args:
-        youtube_service: The authenticated YouTube API service object.
-        query (str): The search term (e.g., "python tutorial #shorts").
-        max_results (int): The maximum number of search results to return.
-
-    Returns:
-        A list of dictionaries, where each dictionary contains 'title' and 'videoId'
-        for a video, or None if an error occurs.
-    """
     if not youtube_service:
         print("ERROR: YouTube service not available. Please check your API Key")
         return None

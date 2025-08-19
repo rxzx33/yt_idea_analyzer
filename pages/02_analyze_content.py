@@ -1,7 +1,11 @@
 import streamlit as st
+from googleapiclient.discovery import build
+import google.generativeai as genai
+from google.generativeai import GenerativeModel
+import time
+import json
+from streamlit_cookies_manager import EncryptedCookieManager
 
-# Page 2: Analyze Content
-# Import functions from main.py BEFORE any other operations
 from main import (
     search_youtube_videos,
     get_video_details,
@@ -14,14 +18,6 @@ st.set_page_config(
     page_icon="📊",
     layout="wide"
 )
-
-from googleapiclient.discovery import build
-import google.generativeai as genai
-from google.generativeai import GenerativeModel
-from datetime import datetime
-import json
-import textwrap
-from streamlit_cookies_manager import EncryptedCookieManager
 
 cookies = EncryptedCookieManager(
     prefix = "yt_shorts_analyzer",
@@ -90,7 +86,7 @@ with st.form("content_analysis_form"):
         if not topic:
             st.error("❗ Mohon masukkan topik atau ide YouTube Shorts kamu.")
         else:
-            with st.spinner("🔍 Analisis sedang dilakukan..."):
+            with st.spinner("🚀 Menghubungkan ke server..."):
                 try:
                     # Create YouTube service
                     youtube_service = build(
@@ -135,36 +131,6 @@ with st.form("content_analysis_form"):
                             analysis_output = video_analysis(search_results, video_details)
                             
                             if analysis_output:
-                                st.success("✅ Analisis berhasil dilakukan!")
-                                
-                                # Display summary metrics
-                                st.subheader("📈 Ringkasan Analisis")
-                                col1, col2, col3, col4 = st.columns(4)
-                                col1.metric("Total Video", analysis_output.get('totalVideos', 'N/A'))
-                                col2.metric("Total Penayangan", f"{analysis_output.get('totalViews', 0):,}")
-                                col3.metric("Rata-rata Penayangan", f"{analysis_output.get('averageViews', 0):,}")
-                                col4.metric("Engagement Rate", analysis_output.get('averageEngagementRate', 'N/A'))
-                                
-                                # Display top performers
-                                top_videos = analysis_output.get('topPerformers', [])
-                                
-                                if top_videos:
-                                    st.subheader(f"🏆 5 Video Teratas untuk pencarian '{search_query}'")
-                                    for i, video in enumerate(top_videos, start=1):
-                                        views_formatted = f"{video.get('viewCount', 'N/A'):,}" if isinstance(video.get('viewCount'), (int, float)) else video.get('viewCount', 'N/A')
-                                        st.write(f"**{i}. {video.get('title', 'N/A')}**")
-                                        st.write(f"👁️ Penayangan: {views_formatted} | 👍 Suka: {video.get('likeCount', 'N/A')} | 📊 Engagement Rate: {video.get('engagementRate', 'N/A')}")
-                                        st.markdown("---")
-                                    
-                                    st.info("""
-                                    ℹ️ **Catatan:**
-                                    - Engagement Rate dihitung sebagai (Jumlah Suka + Jumlah Komentar) / Jumlah Penayangan
-                                    - Video dengan engagement rate yang lebih tinggi menunjukkan potensi yang lebih baik untuk ide konten Anda
-                                    """)
-                                
-                                # Use channel context data from session state (already validated above)
-                                # We don't need a fallback here since we've already checked for its existence
-                                
                                 # Prepare LLM prompt
                                 llm_prompt = f"""
                                 Anda adalah seorang ahli strategi pemasaran digital YouTube Shorts yang berpengalaman dan tajam.
@@ -219,14 +185,56 @@ with st.form("content_analysis_form"):
                                 8. **PENTING (Kondisional): Jika [Keputusan Akhir] adalah "KURANG LAYAK DIKEJAR" atau "TIDAK LAYAK DIKEJAR", maka JANGAN SERTAKAN bagian '[Saran Judul & Ide Konten Tambahan]', '[🎯 Saran Hooks (3 Detik Pertama)]', '[✨ Taktik & Sudut Pandang Unik]', '[➡️ Saran Call to Action (CTA)]', dan '[# Saran Hashtag & Deskripsi Singkat]'. Akhiri respons setelah bagian '[Mengapa?]'.**
                                 """
                                 
-                                st.write("🧠 Menghasilkan rekomendasi AI...")
+                                my_bar = st.progress(0, text="Menganalisa ide konten...")
+
+                                gemini_response = None
+                                api_error = None
                                 
-                                # Generate content with Gemini
-                                gemini_response = gemini_model.generate_content(llm_prompt)
-                                gemini_analysis_text = gemini_response.text
+                                try:
+                                    gemini_response = gemini_model.generate_content(llm_prompt)
+                                except Exception as e:
+                                    api_error = e
+
+                                for i in range(100):
+                                    time.sleep(0.8)
+                                    my_bar.progress(i + 1, text=f"Menganalisa ide konten... {i + 1}%")
+
+                                my_bar.empty()
+
+                                if api_error:
+                                    st.error(f"Terjadi kesalahan saat mengakses API: {str(api_error)}")
+                                elif gemini_response:
+                                    gemini_analysis_text = gemini_response.text
+                                    st.success("Analisa selesai!")
+                                    st.subheader("Hasil Analisa Konten")
+                                    st.markdown(gemini_analysis_text)
+                                else:
+                                    st.warning("Tidak ada data yang tersedia untuk analisis.")
+
+                                # Display summary metrics
+                                st.subheader("📈 Ringkasan Analisis")
+                                col1, col2, col3, col4 = st.columns(4)
+                                col1.metric("Total Video", analysis_output.get('totalVideos', 'N/A'))
+                                col2.metric("Total Penayangan", f"{analysis_output.get('totalViews', 0):,}")
+                                col3.metric("Rata-rata Penayangan", f"{analysis_output.get('averageViews', 0):,}")
+                                col4.metric("Engagement Rate", analysis_output.get('averageEngagementRate', 'N/A'))
                                 
-                                st.subheader("🤖 Hasil Analisa Konten oleh AI")
-                                st.markdown(gemini_analysis_text)
+                                # Display top performers
+                                top_videos = analysis_output.get('topPerformers', [])
+                                
+                                if top_videos:
+                                    st.subheader(f"5 Video Teratas untuk pencarian '{search_query}'")
+                                    for i, video in enumerate(top_videos, start=1):
+                                        views_formatted = f"{video.get('viewCount', 'N/A'):,}" if isinstance(video.get('viewCount'), (int, float)) else video.get('viewCount', 'N/A')
+                                        st.write(f"**{i}. {video.get('title', 'N/A')}**")
+                                        st.write(f"👁️ Penayangan: {views_formatted} | 👍 Suka: {video.get('likeCount', 'N/A')} | 📊 Engagement Rate: {video.get('engagementRate', 'N/A')}")
+                                        st.markdown("---")
+                                    
+                                    st.info("""
+                                    ℹ️ **Catatan:**
+                                    - Engagement Rate dihitung sebagai (Jumlah Suka + Jumlah Komentar) / Jumlah Penayangan
+                                    - Video dengan engagement rate yang lebih tinggi menunjukkan potensi yang lebih baik untuk ide konten Anda
+                                    """)
                             else:
                                 st.error("❌ Tidak ada hasil analisis yang dihasilkan.")
                         else:

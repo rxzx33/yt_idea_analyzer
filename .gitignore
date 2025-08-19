@@ -141,3 +141,6 @@ Thumbs.db
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Agentic LLM files
+.agent.md
