@@ -11,15 +11,15 @@ from main import (
 )
 
 st.set_page_config(
-    page_title="YouTube Shorts Idea Analyzer",
+    page_title="YouTube Video Idea Analyzer",
     page_icon="📺",
     layout="wide"
 )
 
-st.title("📺 YouTube Shorts Idea Analyzer")
+st.title("📺 YouTube Video Idea Analyzer")
 
 st.markdown("""
-Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan memberikan feedback berdasarkan potensinya.
+Aplikasi sederhana ini membantu kamu menganalisa ide konten YouTube kamu dan memberikan feedback berdasarkan potensinya.
 """)
 
 # No cookie manager initialization needed
@@ -200,11 +200,11 @@ gemini_api_key = st.session_state.gemini_api_key
 
 # Content analysis form
 with st.form("content_analysis_form"):
-    topic = st.text_input("Masukkan topik atau ide YouTube Shorts kamu", 
+    topic = st.text_input("Masukkan topik atau ide konten YouTube kamu", 
                          placeholder="Contoh: Misteri Dunia, Resep Masakan Sehat, Fakta Sejarah")
     
     # Add checkbox for Shorts filter
-    shorts_filter = st.checkbox("Gunakan filter #shorts dalam pencarian?", value=True)
+    shorts_filter = st.checkbox("Batasi pencarian untuk YouTube Shorts saja?", value=False)
     
     submitted = st.form_submit_button("🔍 Analisa Ide Konten")
     
@@ -257,10 +257,10 @@ with st.form("content_analysis_form"):
                             if analysis_output:
                                 # Prepare LLM prompt
                                 llm_prompt = f"""
-                                Anda adalah seorang ahli strategi pemasaran digital YouTube Shorts yang berpengalaman dan tajam.
+                                Anda adalah seorang ahli strategi pemasaran digital YouTube yang berpengalaman dan tajam.
                                 Tugas Anda adalah menganalisis potensi ide konten yang disajikan dan memberikan rekomendasi yang jelas, singkat, dan langsung pada intinya.
 
-                                Berikut adalah data analisis video Shorts terkait ide konten yang dicari. Data ini kini sangat kaya, mencakup detail per video seperti judul, ID, jumlah penayangan, tanggal publikasi, durasi, jumlah suka (likeCount), jumlah komentar (commentCount), dan tingkat keterlibatan (engagementRate). Ringkasan keseluruhan juga menyertakan rata-rata tingkat keterlibatan (averageEngagementRate). **Harap perhatikan juga 'currentTimestamp' yang menunjukkan waktu analisis dilakukan, untuk membantu Anda menilai usia video.**
+                                Berikut adalah data analisis video terkait ide konten yang dicari. Data ini kini sangat kaya, mencakup detail per video seperti judul, ID, jumlah penayangan, tanggal publikasi, durasi, jumlah suka (likeCount), jumlah komentar (commentCount), dan tingkat keterlibatan (engagementRate). Ringkasan keseluruhan juga menyertakan rata-rata tingkat keterlibatan (averageEngagementRate). **Harap perhatikan juga 'currentTimestamp' yang menunjukkan waktu analisis dilakukan, untuk membantu Anda menilai usia video.**
                                 {json.dumps(analysis_output, indent=2)}
 
                                 ---
@@ -273,9 +273,9 @@ with st.form("content_analysis_form"):
                                 
                                 ---
 
-                                Berdasarkan data video yang relevan di atas, dan dengan mempertimbangkan konteks saluran saya, berikan analisis komprehensif tentang potensi ide konten ini di YouTube Shorts.
+                                Berdasarkan data video yang relevan di atas, dan dengan mempertimbangkan konteks saluran saya, berikan analisis komprehensif tentang potensi ide konten ini di YouTube.
                                 
-                                Fokus utama analisis Anda adalah membantu saya memutuskan: **Apakah ide konten ini layak dikejar untuk saluran YouTube Shorts saya?**
+                                Fokus utama analisis Anda adalah membantu saya memutuskan: **Apakah ide konten ini layak dikejar untuk saluran YouTube saya?**
                                 
                                 **RESPONSE FORMAT:**
                                 Sampaikan analisis Anda dalam format berikut, dengan jawaban yang sangat ringkas dan langsung pada inti.
@@ -290,7 +290,7 @@ with st.form("content_analysis_form"):
                                 [Jelaskan secara singkat apakah ada minat yang jelas dari audiens untuk topik ini, berdasarkan metrik penayangan dan keterlibatan. Gunakan bahasa naratif, hindari nama kunci JSON. Contoh: "Penayangan rata-rata sangat tinggi dengan beberapa video viral yang mencapai jutaan views, menunjukkan minat pasar yang masif. Tingkat keterlibatan juga cukup sehat."]
 
                                 **🎯 Ide Hooks:**
-                                [Berikan 2-3 ide 'hook' yang menarik dan singkat (untuk 3 detik pertama) untuk video Shorts ini, yang relevan dengan topik dan mampu menarik perhatian penonton secara instan.]
+                                [Berikan 2-3 ide 'hook' yang menarik dan singkat (untuk 3 detik pertama) untuk video ini, yang relevan dengan topik dan mampu menarik perhatian penonton secara instan.]
 
                                 **Saran Hashtag & Deskripsi Singkat:**
                                 [Berikan 2-3 hashtag yang paling relevan untuk meningkatkan visibilitas video. Sertakan juga contoh deskripsi singkat (1-2 kalimat) yang dapat digunakan, dengan kata kunci relevan.]
@@ -299,7 +299,7 @@ with st.form("content_analysis_form"):
                                 [Sertakan 1-2 saran tentang taktik atau sudut pandang konten yang unik berdasarkan analisis persaingan, agar video Anda bisa menonjol di niche ini. Ini bisa berupa gaya penyampaian, elemen visual, atau format cerita.]
 
                                 **➡️ Saran Call to Action (CTA):**
-                                [Berikan 1-2 ide 'Call to Action' (CTA) yang efektif dan relevan untuk video Shorts ini, mendorong interaksi penonton seperti like, komentar, subscribe, atau kunjungan link di deskripsi.]
+                                [Berikan 1-2 ide 'Call to Action' (CTA) yang efektif dan relevan untuk video ini, mendorong interaksi penonton seperti like, komentar, subscribe, atau kunjungan link di deskripsi.]
 
                                 RESPONSE RULES:
                                 1. **MULAI LANGSUNG DENGAN ANALISIS:** Jangan berikan pengenalan atau salam. Langsung mulai dengan analisis poin pertama ("1. Potensi Pasar & Audiens").

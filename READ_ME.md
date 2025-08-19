@@ -1,12 +1,12 @@
-# YouTube Shorts Idea Analyzer
+# YouTube Video Idea Analyzer
 
-This application helps analyze YouTube Shorts content ideas by examining trending videos and providing insights using YouTube Data API and Google Gemini.
+This application helps analyze YouTube content ideas by examining trending videos and providing insights using YouTube Data API and Google Gemini. It works for both YouTube Shorts and regular YouTube videos.
 
 ## Multi-Page Interface
 
-This application now features a multi-page interface for better user experience:
+This application features a multi-page interface for better user experience:
 
-1. **Home Page** - Overview and instructions (now includes content analysis)
+1. **Home Page** - Overview and instructions (includes content analysis)
 2. **Setup Channel Context** - Enter information about your YouTube channel for personalized analysis (uses generic placeholders by default)
 3. **Setup API Keys** - Securely enter and store your API keys
 
@@ -26,8 +26,8 @@ Your API keys are stored locally in your browser session and are never sent to a
 4. Navigasi ke halaman "Setup Channel Context" di sidebar
 5. Masukkan dan simpan informasi channel Anda untuk analisis yang dipersonalisasi (termasuk 3 Video Teratas Anda)
 6. Kembali ke halaman utama (Home Page)
-7. Masukkan ide konten YouTube Shorts Anda di kolom teks
-8. Pilih apakah akan memfilter hasil hanya untuk konten Shorts
+7. Masukkan ide konten YouTube Anda di kolom teks
+8. Pilih apakah akan memfilter hasil hanya untuk konten Shorts (opsional)
 9. Klik "Analisa Ide Konten"
 10. Tunggu analisis selesai
 11. Lihat rekomendasi dan wawasan yang dihasilkan AI

@@ -266,7 +266,7 @@ if __name__ == '__main__':
         print("Apakah Anda ingin membatasi pencarian hanya pada video YouTube Shorts?")
         short_choice_options = ['Ya, hanya Shorts', 'Tidak, cari semua video relevan']
 
-        short_choice = get_user_choice('Gunakan filter #shorts dalam pencarian?', short_choice_options)
+        short_choice = get_user_choice('Batasi pencarian untuk YouTube Shorts saja?', short_choice_options)
 
         if short_choice == 1:
             search_query += " #shorts"
