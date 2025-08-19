@@ -2,7 +2,6 @@ import streamlit as st
 from googleapiclient.discovery import build
 import google.generativeai as genai
 from google.generativeai import GenerativeModel
-import time
 import json
 from main import (
     search_youtube_videos,
@@ -22,9 +21,7 @@ st.markdown("""
 Aplikasi sederhana ini membantu kamu menganalisa ide konten YouTube kamu dan memberikan feedback berdasarkan potensinya.
 """)
 
-# No cookie manager initialization needed
-
-# Initialize session state for API keys if not already present
+# Initialize session state for API keys
 if 'yt_api_key' not in st.session_state:
     st.session_state.yt_api_key = ""
 
@@ -38,7 +35,6 @@ if 'channel_context' not in st.session_state:
 channel_context = st.session_state.get('channel_context', {})
 
 # Sidebar for API Key Configuration
-
 with st.sidebar:
     st.header("👋 Selamat Datang!")
     st.markdown("""
@@ -162,6 +158,7 @@ with st.sidebar:
         
         # Add target audience inputs
         st.subheader("Target Audience")
+        st.markdown("Informasi tentang Target Audience bisa didapatkan dari YouTube Studio")
         age_range = st.text_input(
             "Rentang Usia", 
             value=channel_context.get("age_range", "") if channel_context else "",
