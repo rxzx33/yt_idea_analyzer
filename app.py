@@ -152,6 +152,34 @@ with st.sidebar:
                     ["", "Bahasa Indonesia", "English"].index(channel_context.get("language", ""))
         )
         
+        # Add subscriber count input
+        subscriber_count = st.number_input(
+            "Jumlah Subscriber (Perkiraan)", 
+            min_value=0, 
+            value=channel_context.get("subscriber_count", 0) if channel_context else 0,
+            help="Masukkan jumlah subscriber perkiraan channel Anda"
+        )
+        
+        # Add target audience inputs
+        st.subheader("Target Audience")
+        age_range = st.text_input(
+            "Rentang Usia", 
+            value=channel_context.get("age_range", "") if channel_context else "",
+            placeholder="Contoh: 18-35"
+        )
+        
+        geography = st.text_input(
+            "Geografi", 
+            value=channel_context.get("geography", "") if channel_context else "",
+            placeholder="Contoh: Indonesia, Malaysia"
+        )
+        
+        interests = st.text_input(
+            "Minat", 
+            value=channel_context.get("interests", "") if channel_context else "",
+            placeholder="Contoh: Teknologi, Hiburan, Edukasi"
+        )
+        
         channel_submit = st.form_submit_button("💾 Simpan Info Channel")
         
         if channel_submit:
@@ -159,20 +187,29 @@ with st.sidebar:
                 # Update channel context
                 updated_context = {
                     "niche": niche_input,
-                    "language": language_input
+                    "language": language_input,
+                    "subscriber_count": subscriber_count,
+                    "age_range": age_range,
+                    "geography": geography,
+                    "interests": interests
                 }
                 
                 st.session_state.channel_context = updated_context
                 st.success("✅ Info channel tersimpan dalam sesi ini!")
                 st.rerun()
             else:
-                st.error("❗ Mohon isi kedua field untuk menyimpan.")
+                st.error("❗ Mohon isi Niche dan Bahasa Channel untuk menyimpan.")
     
         # Show current channel status
         if st.session_state.get('channel_context') and channel_context.get("niche") and channel_context.get("language"):
             current_niche = channel_context.get("niche")
             current_language = channel_context.get("language")
-            st.info(f"📊 Niche: {current_niche} | 🌐 Bahasa: {current_language}")
+            current_subscribers = channel_context.get("subscriber_count", 0)
+            st.info(f"📊 Niche: {current_niche} | 🌐 Bahasa: {current_language} | 👥 Subscribers: {current_subscribers:,}")
+            
+            # Show additional context if available
+            if channel_context.get("age_range") or channel_context.get("geography") or channel_context.get("interests"):
+                st.info(f"🎯 Audience: {channel_context.get('age_range', 'N/A')} | 🌍 {channel_context.get('geography', 'N/A')} | 💡 {channel_context.get('interests', 'N/A')}")
         elif st.session_state.get('channel_context'):
             st.warning("⚠️ Info channel belum lengkap")
         else:
@@ -268,8 +305,10 @@ with st.form("content_analysis_form"):
                                 Konteks channel YouTube saya untuk analisis ini:
                                 - Niche Channel: {channel_context.get("niche")}
                                 - Bahasa Channel: {channel_context.get("language")}
+                                - Jumlah Subscriber: {channel_context.get("subscriber_count", 0):,}
+                                - Target Audience: {channel_context.get("age_range", "N/A")} tahun, {channel_context.get("geography", "N/A")}, minat: {channel_context.get("interests", "N/A")}
                                 
-                                Mohon berikan analisis yang disesuaikan dengan niche dan bahasa channel saya.
+                                Mohon berikan analisis yang disesuaikan dengan niche, ukuran channel, dan target audience saya.
                                 
                                 ---
 
@@ -277,14 +316,20 @@ with st.form("content_analysis_form"):
                                 
                                 Fokus utama analisis Anda adalah membantu saya memutuskan: **Apakah ide konten ini layak dikejar untuk saluran YouTube saya?**
                                 
+                                **PENTING**: Evaluasi ide konten ini berdasarkan kriteria berikut:
+                                1. **DEMAND** - Apakah ada permintaan yang signifikan untuk topik ini? (lihat dari jumlah penayangan rata-rata)
+                                2. **KOMPETISI** - Seberapa ketat persaingan di topik ini? (lihat dari jumlah video dengan performa tinggi)
+                                3. **RELEVANSI** - Seberapa cocok topik ini dengan niche channel saya?
+                                4. **UKURAN CHANNEL** - Apakah channel saya (dengan {channel_context.get("subscriber_count", 0):,} subscriber) memiliki peluang yang realistis untuk bersaing di topik ini?
+                                
                                 **RESPONSE FORMAT:**
-                                Sampaikan analisis Anda dalam format berikut, dengan jawaban yang sangat ringkas dan langsung pada inti.
+                                Sampaikan analisis Anda dalam format berikut, dengan jawaban yang sangat ringkas dan langsung pada intinya.
 
                                 **💡 Rekomendasi Hasil Analisis:**
                                 [Sertakan keputusan yang jelas: "SANGAT LAYAK DIKEJAR", "LAYAK DIKEJAR", "KURANG LAYAK DIKEJAR", atau "TIDAK LAYAK DIKEJAR". Pilih salah satu dari empat opsi ini. Pastikan untuk memberikan keputusan yang tegas berdasarkan analisis Anda.]
 
                                 **❓ Mengapa?:**
-                                [Jelaskan alasan utama untuk keputusan di atas secara ringkas. Fokus pada DEMAND, KOMPETISI, dan RELEVANSI dengan channel Anda. Beri penilaian yang jujur dan realistis. Contoh: "Permintaan tinggi, kompetisi moderat, sangat cocok dengan niche Anda." atau "Permintaan ada tapi kompetisi terlalu tinggi untuk channel kecil." atau "Topik tidak relevan dengan audiens Anda."]
+                                [Jelaskan alasan utama untuk keputusan di atas secara ringkas. Fokus pada DEMAND, KOMPETISI, RELEVANSI, dan UKURAN CHANNEL. Beri penilaian yang jujur dan realistis. Contoh: "Permintaan tinggi, kompetisi moderat, sangat cocok dengan niche Anda, dan sesuai untuk channel berukuran {channel_context.get("subscriber_count", 0):,} subscriber." atau "Permintaan ada tapi kompetisi terlalu tinggi untuk channel kecil." atau "Topik tidak relevan dengan audiens Anda."]
 
                                 **🚀 Potensi Konten:**
                                 [Jelaskan secara singkat apakah ada minat yang jelas dari audiens untuk topik ini, berdasarkan metrik penayangan dan keterlibatan. Gunakan bahasa naratif, hindari nama kunci JSON. Contoh: "Penayangan rata-rata sangat tinggi dengan beberapa video viral yang mencapai jutaan views, menunjukkan minat pasar yang masif. Tingkat keterlibatan juga cukup sehat."]
@@ -302,7 +347,7 @@ with st.form("content_analysis_form"):
                                 [Berikan 1-2 ide 'Call to Action' (CTA) yang efektif dan relevan untuk video ini, mendorong interaksi penonton seperti like, komentar, subscribe, atau kunjungan link di deskripsi.]
 
                                 RESPONSE RULES:
-                                1. **MULAI LANGSUNG DENGAN ANALISIS:** Jangan berikan pengenalan atau salam. Langsung mulai dengan analisis poin pertama ("1. Potensi Pasar & Audiens").
+                                1. **MULAI LANGSUNG DENGAN ANALISIS:** Jangan berikan pengenalan atau salam. Langsung mulai dengan analisis poin pertama.
                                 2. **Format jawaban Anda dengan jelas, menggunakan daftar poin dan paragraf yang mudah dibaca, serta berikan rekomendasi yang spesifik dan dapat ditindaklanjuti.**
                                 3. **Mohon sampaikan analisis Anda dalam bahasa yang alami dan mudah dipahami oleh pembuat konten, tanpa mengacu langsung pada nama-nama kunci data JSON seperti viewCount, videoAgeDays, highestViews, dll. Terjemahkan data tersebut menjadi narasi yang ringkas dan relevan.**
                                 4. **Jika kamu perlu menyebutkan video tertentu, gunakan judul video tersebut sebagai referensi, bukan ID video.**
