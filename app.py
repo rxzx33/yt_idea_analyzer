@@ -235,7 +235,7 @@ with st.form("content_analysis_form"):
         if not topic:
             st.error("❗ Mohon masukkan topik atau ide YouTube Shorts kamu.")
         else:
-            with st.spinner("🚀 Menghubungkan ke server..."):
+            with st.spinner("🚀 Menganalisis ide konten..."):
                 try:
                     # Create YouTube service
                     youtube_service = build(
@@ -260,8 +260,6 @@ with st.form("content_analysis_form"):
                     search_query = topic
                     if shorts_filter:
                         search_query += " #shorts"
-                    
-                    st.write(f"🔍 Mencari video dengan keyword: {search_query}")
                     
                     # Search for videos
                     search_results = search_youtube_videos(youtube_service, search_query, max_results=20)
@@ -336,8 +334,6 @@ with st.form("content_analysis_form"):
                                 7. **HANYA BERIKAN JAWABAN SESUAI FORMAT DI ATAS.** Pastikan setiap bagian dalam format respons terisi.
                                 8. **PENTING (Kondisional): Jika [Keputusan Akhir] adalah "KURANG LAYAK DIKEJAR" atau "TIDAK LAYAK DIKEJAR", maka JANGAN SERTAKAN bagian '[Saran Judul & Ide Konten Tambahan]', '[🎯 Saran Hooks (3 Detik Pertama)]', '[✨ Taktik & Sudut Pandang Unik]', '[➡️ Saran Call to Action (CTA)]', dan '[# Saran Hashtag & Deskripsi Singkat]'. Akhiri respons setelah bagian '[Mengapa?]'.**
                                 """
-                                
-                                my_bar = st.progress(0, text="Menganalisa ide konten...")
 
                                 gemini_response = None
                                 api_error = None
@@ -346,12 +342,6 @@ with st.form("content_analysis_form"):
                                     gemini_response = gemini_model.generate_content(llm_prompt)
                                 except Exception as e:
                                     api_error = e
-
-                                for i in range(100):
-                                    time.sleep(0.8)
-                                    my_bar.progress(i + 1, text=f"Menganalisa ide konten... {i + 1}%")
-
-                                my_bar.empty()
 
                                 if api_error:
                                     st.error(f"Terjadi kesalahan saat mengakses API: {str(api_error)}")
@@ -363,7 +353,6 @@ with st.form("content_analysis_form"):
                                 else:
                                     st.warning("Tidak ada data yang tersedia untuk analisis.")
 
-                                st.markdown("---")
                                 # Display summary metrics
                                 st.subheader("📈 Ringkasan Analisis")
                                 col1, col2, col3, col4 = st.columns(4)
