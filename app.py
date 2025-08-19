@@ -141,14 +141,14 @@ with st.sidebar:
     with st.form("sidebar_channel_form"):
         niche_input = st.text_input(
             "Niche Channel", 
-            value=channel_context.get("niche", ""),
+            value=channel_context.get("niche", "") if channel_context else "",
             placeholder="Contoh: Gaming, Edukasi, Hiburan, Teknologi"
         )
         
         language_input = st.selectbox(
             "Bahasa Channel",
             options=["", "Bahasa Indonesia", "English"],
-            index=0 if not channel_context.get("language") else 
+            index=0 if not channel_context or not channel_context.get("language") else 
                     ["", "Bahasa Indonesia", "English"].index(channel_context.get("language", ""))
         )
         
