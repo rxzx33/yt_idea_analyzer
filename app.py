@@ -4,7 +4,6 @@ import google.generativeai as genai
 from google.generativeai import GenerativeModel
 import time
 import json
-from streamlit_cookies_manager import EncryptedCookieManager
 from main import (
     search_youtube_videos,
     get_video_details,
@@ -23,34 +22,17 @@ st.markdown("""
 Aplikasi sederhana ini membantu kamu menganalisa ide YouTube Shorts kamu dan memberikan feedback berdasarkan potensinya.
 """)
 
-cookies = EncryptedCookieManager(
-    prefix = "yt_shorts_analyzer",
-    password = st.secrets["COOKIE_ENCRYPTION_PASSWORD"]
-)
-
-if not cookies.ready():
-    st.stop()
+# No cookie manager initialization needed
 
 # Initialize session state for API keys if not already present
 if 'yt_api_key' not in st.session_state:
-    if cookies.get("yt_api_key"):
-        st.session_state.yt_api_key = cookies.get("yt_api_key")
-    else:
-        st.session_state.yt_api_key = ""
+    st.session_state.yt_api_key = ""
 
 if 'gemini_api_key' not in st.session_state:
-    if cookies.get("gemini_api_key"):
-        st.session_state.gemini_api_key = cookies.get("gemini_api_key")
-    else:
-        st.session_state.gemini_api_key = ""
+    st.session_state.gemini_api_key = ""
 
-if 'channel_context' not in st.session_state and cookies.get("channel_context"):
-    # Load channel context from cookies (stored as JSON string)
-    channel_context_json = cookies.get("channel_context")
-    try:
-        st.session_state.channel_context = json.loads(channel_context_json)
-    except (json.JSONDecodeError, TypeError):
-        st.session_state.channel_context = None
+if 'channel_context' not in st.session_state:
+    st.session_state.channel_context = None
 
 # Get channel context from session state
 channel_context = st.session_state.get('channel_context', {})
@@ -128,10 +110,7 @@ with st.sidebar:
                 if yt_key_valid and gemini_key_valid:
                     st.session_state.yt_api_key = yt_api_key_input
                     st.session_state.gemini_api_key = gemini_api_key_input
-                    cookies["yt_api_key"] = yt_api_key_input
-                    cookies["gemini_api_key"] = gemini_api_key_input
-                    cookies.save()
-                    st.success("✅ API Keys tersimpan!")
+                    st.success("✅ API Keys tersimpan dalam sesi ini!")
                     st.rerun()
                 else:
                     st.error("❗ Gagal validasi API Keys.")
@@ -184,9 +163,7 @@ with st.sidebar:
                 }
                 
                 st.session_state.channel_context = updated_context
-                cookies["channel_context"] = json.dumps(updated_context)
-                cookies.save()
-                st.success("✅ Info channel tersimpan!")
+                st.success("✅ Info channel tersimpan dalam sesi ini!")
                 st.rerun()
             else:
                 st.error("❗ Mohon isi kedua field untuk menyimpan.")
