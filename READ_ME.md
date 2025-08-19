@@ -19,7 +19,7 @@ This application requires you to provide your own API keys for:
 
 Your API keys are stored locally in your browser session and are never sent to any server, ensuring that API costs are associated with your own account.
 
-## Cara Menggunakan Aplikasi Ini
+## How to Use this App
 
 1. Get your YouTube Data API and Google Gemini API keys (instructions below)
 2. Navigate to the "Setup API Keys" page
