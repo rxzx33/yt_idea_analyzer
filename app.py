@@ -215,7 +215,7 @@ with st.sidebar:
 # Check if API keys are available before proceeding
 api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
 if not api_keys_available:
-    st.warning("🔐 Silakan masukkan API Keys di sidebar untuk melanjutkan.")
+    st.warning("⚠️ Silakan masukkan API Keys dan informasi channel YouTube di sidebar untuk melanjutkan.")
     st.stop()
 
 # Check if channel context is available before proceeding
