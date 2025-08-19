@@ -65,7 +65,6 @@ def search_youtube_videos(youtube_service, query, max_results=20):
             type='video',
             order='relevance',
             maxResults=max_results,
-            regionCode='ID',  # set the search region to Indonesia
         ).execute()
 
         videos = []
@@ -277,8 +276,6 @@ if __name__ == '__main__':
         search_results = search_youtube_videos(youtube_service, search_query, max_results=20)
 
         if search_results:
-            print(f"\nMenemukan {len(search_results)} video potensial (mengambil detail...)")
-
             video_ids_to_fetch = [video['videoId'] for video in search_results if video.get('videoId')]
 
             video_details = get_video_details(youtube_service, video_ids_to_fetch)
