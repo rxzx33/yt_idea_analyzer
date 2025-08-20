@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 import os
 import textwrap
+import math
 
 load_dotenv()
 
@@ -228,10 +229,12 @@ def video_analysis (search_results, video_details):
             # Calculate a composite score for ranking
             # Using log of views to prevent extremely popular videos from dominating
             # and engagement rate to ensure quality content is prioritized
-            import math
+            # Additive approach to balance views and engagement more effectively
             views_score = math.log10(current_views + 1) if current_views > 0 else 0
             engagement_score = current_engagement_rate_val if isinstance(current_engagement_rate_val, (int, float)) else 0
-            composite_score = views_score * (1 + engagement_score)  # Boost by engagement
+            # Convert engagement rate to a 0-10 scale and add to views score
+            engagement_bonus = engagement_score * 100  # Convert percentage to 0-10 scale
+            composite_score = views_score + engagement_bonus
             
             analyzable_videos.append({
                 'title': video_data['title'],
