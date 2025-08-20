@@ -17,10 +17,6 @@ st.set_page_config(
 
 st.title("📺 YouTube Video Idea Analyzer")
 
-st.markdown("""
-Aplikasi sederhana ini membantu kamu menganalisa ide konten YouTube kamu dan memberikan feedback berdasarkan potensinya.
-""")
-
 # Initialize session state for API keys
 if 'yt_api_key' not in st.session_state:
     st.session_state.yt_api_key = ""
@@ -38,12 +34,13 @@ channel_context = st.session_state.get('channel_context', {})
 with st.sidebar:
     st.header("👋 Selamat Datang!")
     st.markdown("""
-    Aplikasi ini dirancang untuk membantu kamu menganalisa ide konten YouTube dan memberikan feedback berdasarkan potensinya.
-    Dengan aplikasi ini kamu bisa:
-    1. Menganalisa apakah ide konten kamu memiliki potensi untuk mendapatkan banyak views.
-    2. Melihat seberapa ketat kompetisi dalam topik tertentu.
-    3. Mendapatkan ide hook yang tepat untuk video kamu.
-    4. Menghemat waktu dengan memproduksi konten yang berpotensi dan ide yang layak dikejar.
+    Aplikasi sederhana ini membantu kamu menganalisis ide konten YouTube sebelum mulai produksi. Dengan data yang akurat, kamu bisa memilih ide yang punya memiliki peluang mendapat banyak views dan engagement.
+    
+    **Dengan aplikasi ini kamu bisa:**
+    1. Melihat apakah ide video kamu berpeluang mendapat views yang banyak berdasarkan data topik serupa.
+    2. Mengetahui seberapa banyak creator lain yang membuat konten serupa dan seberapa sulit kompetisi di topik tersebut.
+    3. Dapatkan saran pembuatan konten yang tepat berdasarkan hasil analisis.
+    4. Menghemat waktu dengan memilih ide konten yang punya potensi bagus.
     """)
     st.markdown("---")
     st.header("Cara Menggunakan")
