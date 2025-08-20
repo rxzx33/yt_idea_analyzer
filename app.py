@@ -316,11 +316,8 @@ with st.form("content_analysis_form"):
                                 **💡 Rekomendasi Hasil Analisis:**
                                 [Sertakan keputusan yang jelas: "SANGAT BERPOTENSI", "CUKUP BERPOTENSI", "KURANG BERPOTENSI". Pilih salah satu dari tiga opsi ini. Pastikan untuk memberikan keputusan yang tegas berdasarkan analisis Anda.]
 
-                                **❓ Mengapa?:**
-                                [Jelaskan alasan utama untuk keputusan di atas secara ringkas. Fokus pada DEMAND, KOMPETISI, RELEVANSI, dan UKURAN CHANNEL. Beri penilaian yang jujur dan realistis. Contoh: "Permintaan tinggi, kompetisi moderat, sangat cocok dengan niche Anda, dan sesuai untuk channel berukuran {channel_context.get("subscriber_count", 0):,} subscriber." atau "Permintaan ada tapi kompetisi terlalu tinggi untuk channel kecil." atau "Topik tidak relevan dengan audiens Anda."]
-
-                                **⚠️ Untuk Pertimbangan:**
-                                [Jika hasil analisis "CUKUP BERPOTENSI" tapi kompetisi ketat dan akan sulit disaingi oleh channel user yang masih sedikit, informasikan hal ini kepada pengguna dengan jelas dan secara objektif. Contoh: "Ide/topik video ini sangat cocok untuk channel dan audience Anda, namun perlu dipertimbangkan kompetisi dengan banyak saluran besar yang sudah mapan mendominasi hasil pencarian. Untuk saluran dengan 51 subscriber, bersaing di topik ini akan menjadi tantangan besar dan membutuhkan strategi konten yang sangat unik dan menarik untuk bisa menonjol."]
+                                **❓ Analysis Breakdown:**
+                                [Jelaskan alasan utama untuk keputusan di atas secara ringkas. Fokus pada DEMAND, KOMPETISI, RELEVANSI, dan UKURAN CHANNEL. Beri penilaian yang objektif, jujur, dan realistis. Contoh: "Permintaan tinggi, kompetisi moderat, sangat cocok dengan niche Anda, dan sesuai untuk channel berukuran {channel_context.get("subscriber_count", 0):,} subscriber." atau "Permintaan ada tapi kompetisi terlalu tinggi untuk channel kecil." atau "Topik tidak relevan dengan audiens Anda. PENTING: GUNAKAN BULLET POINTS"]
 
                                 **🚀 Potensi Konten:**
                                 [Jelaskan secara singkat apakah ada minat yang jelas dari audiens untuk topik ini, berdasarkan metrik penayangan dan keterlibatan. Gunakan bahasa naratif, hindari nama kunci JSON. Contoh: "Penayangan rata-rata sangat tinggi dengan beberapa video viral yang mencapai jutaan views, menunjukkan minat pasar yang masif. Tingkat keterlibatan juga cukup sehat."]
