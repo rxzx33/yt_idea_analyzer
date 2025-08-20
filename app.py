@@ -253,7 +253,7 @@ with st.form("content_analysis_form"):
                         search_query += " #shorts"
                     
                     # Search for videos
-                    search_results = search_youtube_videos(youtube_service, search_query, max_results=50)
+                    search_results = search_youtube_videos(youtube_service, search_query, max_results=20)
                     
                     if search_results:
                         st.write(f"📊 Menemukan {len(search_results)} video potensial (mengambil detail...)")

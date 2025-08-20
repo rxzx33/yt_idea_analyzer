@@ -53,7 +53,7 @@ def get_gemini_model():
         return None
     
 # This block is to search for videos based on the topic query
-def search_youtube_videos(youtube_service, query, max_results=50):
+def search_youtube_videos(youtube_service, query, max_results=20):
     if not youtube_service:
         print("ERROR: YouTube service not available. Please check your API Key")
         return None
@@ -70,18 +70,30 @@ def search_youtube_videos(youtube_service, query, max_results=50):
 
         videos = []
         
+        # Convert query to lowercase for case-insensitive comparison
+        query_terms = [term.lower() for term in query.replace("#shorts", "").strip().split() if term]
+        
         for item in search_response.get('items', []):
             snippet_data = item.get('snippet', {})
             id_data = item.get('id', {})
             video_title = snippet_data.get('title', 'No Title')
             video_id = id_data.get('videoId', None)
             if video_id:
-                # Append video details to the list
-                videos.append({
-                'title': video_title, 
-                'videoId': video_id,
-                'url': f'https://www.youtube.com/watch?v={video_id}'
-                })
+                # Check if the video is relevant by ensuring query terms appear in title
+                title_lower = video_title.lower()
+                is_relevant = True
+                
+                # For non-shorts searches, we want to be more strict about relevance
+                if "#shorts" not in query and query_terms:
+                    is_relevant = any(term in title_lower for term in query_terms)
+                
+                # Append video details to the list if relevant
+                if is_relevant:
+                    videos.append({
+                    'title': video_title, 
+                    'videoId': video_id,
+                    'url': f'https://www.youtube.com/watch?v={video_id}'
+                    })
         return videos
     
     except Exception as e:
@@ -201,6 +213,8 @@ def video_analysis (search_results, video_details):
 
     analyzable_videos = []
 
+    # Calculate a relevance score that combines views and engagement
+    # This gives better results than sorting by view count alone
     for video_data in analysis_summary['videos_data']:
         current_views = safe_int_convert(video_data.get('viewCount', 0))
         current_engagement_rate_val = video_data.get('engagementRate', 'N/A')
@@ -210,13 +224,23 @@ def video_analysis (search_results, video_details):
             valid_video_count += 1
             if current_views > highest_views:
                 highest_views = current_views
+            
+            # Calculate a composite score for ranking
+            # Using log of views to prevent extremely popular videos from dominating
+            # and engagement rate to ensure quality content is prioritized
+            import math
+            views_score = math.log10(current_views + 1) if current_views > 0 else 0
+            engagement_score = current_engagement_rate_val if isinstance(current_engagement_rate_val, (int, float)) else 0
+            composite_score = views_score * (1 + engagement_score)  # Boost by engagement
+            
             analyzable_videos.append({
                 'title': video_data['title'],
                 'viewCount': current_views,
                 'likeCount': video_data.get('likeCount', 'N/A'),
                 'videoId': video_data['videoId'],
                 'engagementRate': current_engagement_rate_val,
-                'url': video_data.get('url', f'https://www.youtube.com/watch?v={video_data["videoId"]}')
+                'url': video_data.get('url', f'https://www.youtube.com/watch?v={video_data["videoId"]}'),
+                'compositeScore': composite_score
             })
 
         if isinstance(current_engagement_rate_val, (int, float)) and current_engagement_rate_val > 0:
@@ -229,7 +253,8 @@ def video_analysis (search_results, video_details):
     if engagement_conntributed_video_count > 0:
         average_engagement_rate = round(total_engagement_sum / engagement_conntributed_video_count, 2)
 
-    top_performers = sorted(analyzable_videos, key=lambda x: x['viewCount'], reverse=True)[:5]
+    # Sort by composite score instead of just view count for better relevance
+    top_performers = sorted(analyzable_videos, key=lambda x: x['compositeScore'], reverse=True)[:5]
 
     analysis_summary['totalVideos'] = len(analysis_summary['videos_data'])
     analysis_summary['totalViews'] = total_views
@@ -277,7 +302,7 @@ if __name__ == '__main__':
 
         print(f"\nMencari video dengan keyword: {search_query}")
 
-        search_results = search_youtube_videos(youtube_service, search_query, max_results=50)
+        search_results = search_youtube_videos(youtube_service, search_query, max_results=20)
 
         if search_results:
             video_ids_to_fetch = [video['videoId'] for video in search_results if video.get('videoId')]
