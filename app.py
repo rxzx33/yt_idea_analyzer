@@ -200,14 +200,6 @@ with st.sidebar:
             current_language = channel_context.get("language")
             current_subscribers = channel_context.get("subscriber_count", 0)
             st.info(f"📊 Niche: {current_niche} | 🌐 Bahasa: {current_language} | 👥 Subscribers: {current_subscribers:,}")
-            
-            # Show additional context if available
-            if channel_context.get("age_range") or channel_context.get("geography") or channel_context.get("interests"):
-                st.info(f"🎯 Audience: {channel_context.get('age_range', 'N/A')} | 🌍 {channel_context.get('geography', 'N/A')} | 💡 {channel_context.get('interests', 'N/A')}")
-        elif st.session_state.get('channel_context'):
-            st.warning("⚠️ Info channel belum lengkap")
-        else:
-            st.info("ℹ️ Belum ada info channel")
 
 # Check if API keys are available before proceeding
 api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
