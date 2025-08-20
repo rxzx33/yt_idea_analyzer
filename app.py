@@ -380,6 +380,8 @@ with st.form("content_analysis_form"):
                                         views_formatted = f"{video.get('viewCount', 'N/A'):,}" if isinstance(video.get('viewCount'), (int, float)) else video.get('viewCount', 'N/A')
                                         st.write(f"**{i}. {video.get('title', 'N/A')}**")
                                         st.write(f"👁️ Penayangan: {views_formatted} | 👍 Suka: {video.get('likeCount', 'N/A')} | 📊 Engagement Rate: {video.get('engagementRate', 'N/A')}")
+                                        if video.get('url'):
+                                            st.markdown(f"[Tonton Video]({video.get('url')})")
                                         st.markdown("---")
                                     
                                     st.info("""

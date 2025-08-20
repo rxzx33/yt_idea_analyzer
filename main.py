@@ -78,7 +78,8 @@ def search_youtube_videos(youtube_service, query, max_results=50):
                 # Append video details to the list
                 videos.append({
                 'title': video_title, 
-                'videoId': video_id
+                'videoId': video_id,
+                'url': f'https://www.youtube.com/watch?v={video_id}'
                 })
         return videos
     
@@ -183,6 +184,7 @@ def video_analysis (search_results, video_details):
             'videoId': video_id,
             'duration': duration,
             'title': title,
+            'url': f'https://www.youtube.com/watch?v={video_id}',
             'viewCount': view_count_str,
             'publishedAt': published_date,
             'likeCount': details.get('likeCount', 'N/A'),
@@ -213,6 +215,7 @@ def video_analysis (search_results, video_details):
                 'likeCount': video_data.get('likeCount', 'N/A'),
                 'videoId': video_data['videoId'],
                 'engagementRate': current_engagement_rate_val,
+                'url': video_data.get('url', f'https://www.youtube.com/watch?v={video_data["videoId"]}')
             })
 
         if isinstance(current_engagement_rate_val, (int, float)) and current_engagement_rate_val > 0:
@@ -296,9 +299,10 @@ if __name__ == '__main__':
                         for i, video in enumerate(top_videos, start=1):
                             views_formatted = f"{video.get('viewCount', 'N/A'):,}" if isinstance(video.get('viewCount'), (int, float)) else video.get('viewCount', 'N/A')
                             print(f"{i}. Judul: {video.get('title', 'N/A')}")
-                            print(f"Penayangan: {views_formatted}")
-                            print(f"Jumlah Suka: {video.get('likeCount', 'N/A')}")
-                            print(f"Engagement Rate: {video.get('engagementRate', 'N/A')}")
+                            print(f"   URL: {video.get('url', 'N/A')}")
+                            print(f"   Penayangan: {views_formatted}")
+                            print(f"   Jumlah Suka: {video.get('likeCount', 'N/A')}")
+                            print(f"   Engagement Rate: {video.get('engagementRate', 'N/A')}")
                             print("-" * 20)
                         print(textwrap.dedent(f"""\
                         Catatan:
