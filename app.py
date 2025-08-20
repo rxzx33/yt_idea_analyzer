@@ -138,13 +138,7 @@ with st.sidebar:
             placeholder="Contoh: Gaming, Edukasi, Hiburan, Teknologi"
         )
         
-        language_input = st.selectbox(
-            "Bahasa Channel",
-            options=["", "Bahasa Indonesia", "English"],
-            index=0 if not channel_context or not channel_context.get("language") else 
-                    ["", "Bahasa Indonesia", "English"].index(channel_context.get("language", ""))
-        )
-        
+        # Remove language input since we're hardcoding to Indonesia
         # Add subscriber count input
         subscriber_count = st.number_input(
             "Jumlah Subscriber (Perkiraan)", 
@@ -177,11 +171,10 @@ with st.sidebar:
         channel_submit = st.form_submit_button("💾 Simpan Info Channel")
         
         if channel_submit:
-            if niche_input and language_input:
+            if niche_input:
                 # Update channel context
                 updated_context = {
                     "niche": niche_input,
-                    "language": language_input,
                     "subscriber_count": subscriber_count,
                     "age_range": age_range,
                     "geography": geography,
@@ -192,14 +185,13 @@ with st.sidebar:
                 st.success("✅ Info channel tersimpan dalam sesi ini!")
                 st.rerun()
             else:
-                st.error("❗ Mohon isi Niche dan Bahasa Channel untuk menyimpan.")
+                st.error("❗ Mohon isi Niche Channel untuk menyimpan.")
     
         # Show current channel status
-        if st.session_state.get('channel_context') and channel_context.get("niche") and channel_context.get("language"):
+        if st.session_state.get('channel_context') and channel_context.get("niche"):
             current_niche = channel_context.get("niche")
-            current_language = channel_context.get("language")
             current_subscribers = channel_context.get("subscriber_count", 0)
-            st.info(f"📊 Niche: {current_niche} | 🌐 Bahasa: {current_language} | 👥 Subscribers: {current_subscribers:,}")
+            st.info(f"📊 Niche: {current_niche} | 👥 Subscribers: {current_subscribers:,}")
 
 # Check if API keys are available before proceeding
 api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
@@ -209,11 +201,10 @@ if not api_keys_available:
 
 # Check if channel context is available before proceeding
 channel_context_available = (channel_context and 
-                            channel_context.get("niche") and 
-                            channel_context.get("language"))
+                            channel_context.get("niche"))
 
 if not channel_context_available:
-    st.warning("📺 Silakan lengkapi informasi channel (Niche & Bahasa) di sidebar untuk melanjutkan.")
+    st.warning("📺 Silakan lengkapi informasi channel (Niche) di sidebar untuk melanjutkan.")
     st.info("Informasi ini diperlukan untuk memberikan analisis yang akurat dan relevan dengan channel kamu.")
     st.stop()
 
@@ -292,7 +283,6 @@ with st.form("content_analysis_form"):
                                 
                                 Konteks channel YouTube saya untuk analisis ini:
                                 - Niche Channel: {channel_context.get("niche")}
-                                - Bahasa Channel: {channel_context.get("language")}
                                 - Jumlah Subscriber: {channel_context.get("subscriber_count", 0):,}
                                 - Target Audience: {channel_context.get("age_range", "N/A")} tahun, {channel_context.get("geography", "N/A")}, minat: {channel_context.get("interests", "N/A")}
                                 

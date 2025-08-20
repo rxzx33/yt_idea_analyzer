@@ -65,6 +65,7 @@ def search_youtube_videos(youtube_service, query, max_results=50):
             type='video',
             order='relevance',
             maxResults=max_results,
+            regionCode='ID'  # Hardcode to Indonesia
         ).execute()
 
         videos = []
@@ -316,7 +317,7 @@ if __name__ == '__main__':
                     # Collect channel context from user
                     print("\n--- Informasi Channel ---")
                     niche = input("Niche Channel Anda: ").strip()
-                    language = input("Bahasa Channel (Indonesia/English): ").strip()
+                    # Remove language input since we're hardcoding to Indonesia
                     
                     while True:
                         try:
@@ -337,8 +338,8 @@ if __name__ == '__main__':
                             "geography": geography,
                             "interests": interests
                         },
-                        "niche": niche,
-                        "language": language
+                        "niche": niche
+                        # Removed language since we're hardcoding to Indonesia
                     }
 
                     llm_prompt = f"""
