@@ -286,6 +286,8 @@ with st.form("content_analysis_form"):
                                 Berikut adalah data analisis video terkait ide konten yang dicari. Data ini kini sangat kaya, mencakup detail per video seperti judul, ID, jumlah penayangan, tanggal publikasi, durasi, jumlah suka (likeCount), jumlah komentar (commentCount), dan tingkat keterlibatan (engagementRate). Ringkasan keseluruhan juga menyertakan rata-rata tingkat keterlibatan (averageEngagementRate). **Harap perhatikan juga 'currentTimestamp' yang menunjukkan waktu analisis dilakukan, untuk membantu Anda menilai usia video.**
                                 {json.dumps(analysis_output, indent=2)}
 
+                                PENTING: Pastikan analisa hanya berdasarkan video yang terkait saja, karena youtube terkadang memberikan video pencarian yang kurang sesuai dengan topik yang dicari oleh pengguna.
+
                                 ---
                                 
                                 Konteks channel YouTube saya untuk analisis ini:
@@ -312,7 +314,7 @@ with st.form("content_analysis_form"):
                                 Sampaikan analisis Anda dalam format berikut, dengan jawaban yang sangat ringkas dan langsung pada intinya.
 
                                 **💡 Rekomendasi Hasil Analisis:**
-                                [Sertakan keputusan yang jelas: "SANGAT LAYAK DIKEJAR", "LAYAK DIKEJAR", "KURANG LAYAK DIKEJAR", atau "TIDAK LAYAK DIKEJAR". Pilih salah satu dari empat opsi ini. Pastikan untuk memberikan keputusan yang tegas berdasarkan analisis Anda.]
+                                [Sertakan keputusan yang jelas: "SANGAT BERPOTENSI", "CUKUP BERPOTENSI", "KURANG BERPOTENSI". Pilih salah satu dari tiga opsi ini. Pastikan untuk memberikan keputusan yang tegas berdasarkan analisis Anda.]
 
                                 **❓ Mengapa?:**
                                 [Jelaskan alasan utama untuk keputusan di atas secara ringkas. Fokus pada DEMAND, KOMPETISI, RELEVANSI, dan UKURAN CHANNEL. Beri penilaian yang jujur dan realistis. Contoh: "Permintaan tinggi, kompetisi moderat, sangat cocok dengan niche Anda, dan sesuai untuk channel berukuran {channel_context.get("subscriber_count", 0):,} subscriber." atau "Permintaan ada tapi kompetisi terlalu tinggi untuk channel kecil." atau "Topik tidak relevan dengan audiens Anda."]
@@ -338,9 +340,9 @@ with st.form("content_analysis_form"):
                                 3. **Mohon sampaikan analisis Anda dalam bahasa yang alami dan mudah dipahami oleh pembuat konten, tanpa mengacu langsung pada nama-nama kunci data JSON seperti viewCount, videoAgeDays, highestViews, dll. Terjemahkan data tersebut menjadi narasi yang ringkas dan relevan.**
                                 4. **Jika kamu perlu menyebutkan video tertentu, gunakan judul video tersebut sebagai referensi, bukan ID video.**
                                 5. **Berikan penilaian yang tajam, jujur, dan realistis.**
-                                6. **PENTING: Jangan ragu menyatakan jika ide konten ini tidak layak dikejar.**
+                                6. **PENTING: Jangan ragu menyatakan jika ide konten ini tidak layak dikejar. Tugas kamu adalah memberikan analisis yang objektif, bukan memberikan harapan palsu kepada pengguna.**
                                 7. **HANYA BERIKAN JAWABAN SESUAI FORMAT DI ATAS.** Pastikan setiap bagian dalam format respons terisi.
-                                8. **PENTING (Kondisional): Jika [Keputusan Akhir] adalah "KURANG LAYAK DIKEJAR" atau "TIDAK LAYAK DIKEJAR", maka JANGAN SERTAKAN bagian '[Saran Judul & Ide Konten Tambahan]', '[🎯 Saran Hooks (3 Detik Pertama)]', '[✨ Taktik & Sudut Pandang Unik]', '[➡️ Saran Call to Action (CTA)]', dan '[# Saran Hashtag & Deskripsi Singkat]'. Akhiri respons setelah bagian '[Mengapa?]'.**
+                                8. **PENTING: Jika [Keputusan Akhir] adalah "KURANG BERPOTENSI", maka JANGAN SERTAKAN bagian '[Saran Judul & Ide Konten Tambahan]', '[🎯 Saran Hooks (3 Detik Pertama)]', '[✨ Taktik & Sudut Pandang Unik]', '[➡️ Saran Call to Action (CTA)]', dan '[# Saran Hashtag & Deskripsi Singkat]'. Akhiri respons setelah bagian '[Mengapa?]'.**
                                 """
 
                                 gemini_response = None

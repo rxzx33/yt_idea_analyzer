@@ -53,7 +53,7 @@ def get_gemini_model():
         return None
     
 # This block is to search for videos based on the topic query
-def search_youtube_videos(youtube_service, query, max_results=20):
+def search_youtube_videos(youtube_service, query, max_results=50):
     if not youtube_service:
         print("ERROR: YouTube service not available. Please check your API Key")
         return None
@@ -273,7 +273,7 @@ if __name__ == '__main__':
 
         print(f"\nMencari video dengan keyword: {search_query}")
 
-        search_results = search_youtube_videos(youtube_service, search_query, max_results=20)
+        search_results = search_youtube_videos(youtube_service, search_query, max_results=50)
 
         if search_results:
             video_ids_to_fetch = [video['videoId'] for video in search_results if video.get('videoId')]
