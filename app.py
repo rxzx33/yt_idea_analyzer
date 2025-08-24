@@ -35,12 +35,6 @@ with st.sidebar:
     st.header("👋 Selamat Datang!")
     st.markdown("""
     Aplikasi sederhana ini membantu kamu menganalisis ide konten YouTube sebelum mulai produksi. Dengan data yang akurat, kamu bisa memilih ide yang punya memiliki peluang mendapat banyak views dan engagement.
-    
-    **Dengan aplikasi ini kamu bisa:**
-    1. Melihat apakah ide video kamu berpeluang mendapat views yang banyak berdasarkan data topik serupa.
-    2. Mengetahui seberapa banyak creator lain yang membuat konten serupa dan seberapa sulit kompetisi di topik tersebut.
-    3. Dapatkan saran pembuatan konten yang tepat berdasarkan hasil analisis.
-    4. Menghemat waktu dengan memilih ide konten yang punya potensi bagus.
     """)
     st.markdown("---")
     st.header("Cara Menggunakan")
@@ -162,12 +156,6 @@ with st.sidebar:
             placeholder="Contoh: Indonesia, Malaysia"
         )
         
-        interests = st.text_input(
-            "Minat", 
-            value=channel_context.get("interests", "") if channel_context else "",
-            placeholder="Contoh: Teknologi, Hiburan, Edukasi"
-        )
-        
         channel_submit = st.form_submit_button("💾 Simpan Info Channel")
         
         if channel_submit:
@@ -178,7 +166,7 @@ with st.sidebar:
                     "subscriber_count": subscriber_count,
                     "age_range": age_range,
                     "geography": geography,
-                    "interests": interests
+                    "interests": niche_input
                 }
                 
                 st.session_state.channel_context = updated_context
@@ -186,12 +174,6 @@ with st.sidebar:
                 st.rerun()
             else:
                 st.error("❗ Mohon isi Niche Channel untuk menyimpan.")
-    
-        # Show current channel status
-        if st.session_state.get('channel_context') and channel_context.get("niche"):
-            current_niche = channel_context.get("niche")
-            current_subscribers = channel_context.get("subscriber_count", 0)
-            st.info(f"📊 Niche: {current_niche} | 👥 Subscribers: {current_subscribers:,}")
 
 # Check if API keys are available before proceeding
 api_keys_available = st.session_state.get('yt_api_key') and st.session_state.get('gemini_api_key')
